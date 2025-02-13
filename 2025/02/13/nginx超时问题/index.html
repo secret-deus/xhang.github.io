@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景概述最近计划着重分析一下线上各api的HTTP响应耗时情况，检查是否有接口平均耗时、99分位耗时等相关指标过大的情况，了解到nginx统计请求耗时有四个指标：request_time、upstream_response_time、upstream_connect_time与upstream_header_time，在查找资料的过程中，发现无论是nginx官方文档还是热心网友们的分享，都并没有让">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx 超时问题">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/13/nginx%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="背景概述最近计划着重分析一下线上各api的HTTP响应耗时情况，检查是否有接口平均耗时、99分位耗时等相关指标过大的情况，了解到nginx统计请求耗时有四个指标：request_time、upstream_response_time、upstream_connect_time与upstream_header_time，在查找资料的过程中，发现无论是nginx官方文档还是热心网友们的分享，都并没有让">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-13T08:14:00.000Z">
+<meta property="article:modified_time" content="2025-02-13T08:27:11.868Z">
+<meta property="article:author" content="xhang">
+<meta property="article:tag" content="知识梳理">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Nginx 超时问题 - xhang&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Nginx 超时问题"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-13 16:14" pubdate>
+          2025年2月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Nginx 超时问题</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景概述"><a href="#背景概述" class="headerlink" title="背景概述"></a><strong>背景概述</strong></h2><p>最近计划着重分析一下线上各api的HTTP响应耗时情况，检查是否有接口平均耗时、99分位耗时等相关指标过大的情况，了解到nginx统计请求耗时有四个指标：request_time、upstream_response_time、upstream_connect_time与upstream_header_time，在查找资料的过程中，发现无论是nginx官方文档还是热心网友们的分享，都并没有让自己感觉特别详细、明白地说清楚了这四个指标详细具体含义的资料，于是自己动手探究了一番nginx源码，尝试从其中找出这4个指标的代码级别具体含义。</p>
+<p>特别说明：本文代码分析基于nginx 1.10.0版本，从源码层面分析一次完整HTTP请求log中request_time、upstream_response_time、upstream_connect_time与upstream_header_time四个指标的具体含义，本文中得出的相应结论仅基于个人学习、研究所得，非权威结论，如有不当之处欢迎指正、一起探讨。</p>
+<h2 id="一次完整HTTP请求-响应的各耗时阶段拆分"><a href="#一次完整HTTP请求-响应的各耗时阶段拆分" class="headerlink" title="一次完整HTTP请求&#x2F;响应的各耗时阶段拆分"></a><strong>一次完整HTTP请求&#x2F;响应的各耗时阶段拆分</strong></h2><p>首先详细拆分一下一个完整HTTP请求(非keep alive)生命周期的多个阶段（以下C指代客户端，N指代nginx服务器，S指代上游server）：</p>
+<ol>
+<li>C向N发起TCP三次握手建立连接成功，C开始向N通过TCP发送HTTP请求具体数据(header&#x2F;body…)</li>
+<li>N开始接收到C发送的数据到全部接收完成</li>
+<li>N作为代理向S发起TCP三次握手并建立连接成功，N开始向S发送HTTP数据</li>
+<li>S开始接收N发送的数据并全部接收完成</li>
+<li>S业务代码根据业务规则进行处理完成并生成HTTP响应结果</li>
+<li>S开始将响应结果发送给N</li>
+<li>N开始接收响应结果并接收header部分完成</li>
+<li>N接收S返回的全部响应结果完成，准备关闭该连接</li>
+<li>N开始向C返回全部的HTTP响应结果并发送完成</li>
+<li>C开始接收N返回的数据并全部接收完成</li>
+<li>N向C发起四次挥手关闭TCP连接</li>
+</ol>
+<p>其中1-2和9-11这5个阶段 的速度直接受到C到N之间的网络质量影响，服务端虽然可以通过降低传输数据量、使用更快的协议(如HTTP3.0基于QUIC)等降低传输耗时，但无法起到决定性的作用，一般可视为超出了可优化的控制范围。</p>
+<p>3-8这6个阶段一般都发生在内网，即N与S都处于同一个机房(甚至同一个机架&#x2F;同一台物理机上)，网络质量稳定且RTT基本在1ms内，网络耗时较少，正常情况下其主要时间应集中在阶段5–各种业务逻辑处理数据并生成结果–这也正是一般后端优化的目标阶段。</p>
+<h2 id="各耗时指标nginx官方解释-疑问"><a href="#各耗时指标nginx官方解释-疑问" class="headerlink" title="各耗时指标nginx官方解释 &amp;&amp; 疑问"></a><strong>各耗时指标nginx官方解释 &amp;&amp; 疑问</strong></h2><p>参考:<a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_log_module.html">http://nginx.org/en/docs/http/ngx_http_log_module.html</a></p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-variable">$request_time</span><br>request processing <span class="hljs-keyword">time</span> in seconds with a milliseconds resolution; <span class="hljs-keyword">time</span> elapsed between the first bytes were <span class="hljs-keyword">read</span> from the client <span class="hljs-keyword">and</span> the <span class="hljs-keyword">log</span> <span class="hljs-keyword">write</span> after the <span class="hljs-keyword">last</span> bytes were sent to the client<br><br></code></pre></td></tr></table></figure>
+
+<p>request_time是N接收到C第一个字节数起至N向C发送完最后一个字节数止后日志记录的时间。</p>
+<p>疑问：接收到第一个字节包括TCP三次握手的字节吗？发送完最后一个字节的具体定义是什么–N发送最后一个字节必须收到C的ACK才算发送完成？</p>
+<p>参考: <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_upstream_module.html">http://nginx.org/en/docs/http/ngx_http_upstream_module.html</a></p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vhdl">$upstream_connect_time<br>keeps <span class="hljs-built_in">time</span> spent <span class="hljs-keyword">on</span> establishing a connection <span class="hljs-keyword">with</span> the upstream server (<span class="hljs-number">1.9</span>.<span class="hljs-number">1</span>); the <span class="hljs-built_in">time</span> <span class="hljs-keyword">is</span> kept <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">with</span> millisecond resolution. <span class="hljs-keyword">In</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">of</span> SSL, includes <span class="hljs-built_in">time</span> spent <span class="hljs-keyword">on</span> handshake. Times <span class="hljs-keyword">of</span> several connections are separated by commas <span class="hljs-keyword">and</span> colons like addresses <span class="hljs-keyword">in</span> the $upstream_addr <span class="hljs-keyword">variable</span>.<br><br></code></pre></td></tr></table></figure>
+
+<p>upstream_connect_time记录N与S建立起一个连接的耗时，在SSL中也包括SSL握手的时间。</p>
+<p>疑问：有一丝不确定这个时间具体是指N到S的 TCP三次握手开始到连接建立完成时间–对应上面阶段3？</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp">$<span class="hljs-function">upstream_header_time</span><br><span class="hljs-function">keeps time spent <span class="hljs-keyword">on</span> receiving the response header <span class="hljs-keyword">from</span> the upstream <span class="hljs-title">server</span> (<span class="hljs-params"><span class="hljs-number">1.7</span><span class="hljs-number">.10</span></span>)</span>; the time <span class="hljs-keyword">is</span> kept <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">with</span> millisecond resolution. Times of several responses are separated <span class="hljs-keyword">by</span> commas <span class="hljs-keyword">and</span> colons like addresses <span class="hljs-keyword">in</span> the $upstream_addr variable.<br><br></code></pre></td></tr></table></figure>
+
+<p>upstream_header_time记录N接收到S响应header的时间。</p>
+<p>疑问：能够理解会包含N到S连接建立后收到S header的时间–阶段4~7，但是否包括upstream_connect_time这个建连时间–阶段3呢？</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql">$upstream_response_time<br>keeps <span class="hljs-type">time</span> spent <span class="hljs-keyword">on</span> receiving the response <span class="hljs-keyword">from</span> the upstream server; the <span class="hljs-type">time</span> <span class="hljs-keyword">is</span> kept <span class="hljs-keyword">in</span> seconds <span class="hljs-keyword">with</span> millisecond resolution. Times <span class="hljs-keyword">of</span> several responses <span class="hljs-keyword">are</span> separated <span class="hljs-keyword">by</span> commas <span class="hljs-keyword">and</span> colons <span class="hljs-keyword">like</span> addresses <span class="hljs-keyword">in</span> the $upstream_addr variable.<br><br></code></pre></td></tr></table></figure>
+
+<p>upstream_response_time记录N接收S完整响应的时间。</p>
+<p>疑问：应包含阶段4-8，但是否包括upstream_connect_time这个建连时间–阶段3？</p>
+<p>如上，按照字面意思翻译得到的各指标含义很简洁，但是让人不是很明了，不由的生出一些疑问，于是决定探究一下nginx源码尝试彻底弄清楚这几个指标的具体含义。</p>
+<h2 id="nginx源码探究"><a href="#nginx源码探究" class="headerlink" title="nginx源码探究"></a><strong>nginx源码探究</strong></h2><h3 id="request-time指标"><a href="#request-time指标" class="headerlink" title="request_time指标"></a><strong>request_time指标</strong></h3><p>手上有一份nginx 1.10.0的源码，虽然版本比较旧，但是想来指标统计的基本逻辑是不会变的，先探查范围最大的指标request_time，该指标属于模块ngx_http_log_module,其相关代码在http&#x2F;ngx_http_variables.c 的ngx_http_variable_request_time函数中：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">http/ngx_http_variables.c</span><br><span class="hljs-number">2041 </span><span class="hljs-string">static</span> <span class="hljs-string">ngx_int_t</span><br><span class="hljs-number">2042 </span><span class="hljs-string">ngx_http_variable_request_time(ngx_http_request_t</span> <span class="hljs-string">*r,</span><br><span class="hljs-number">2043     </span><span class="hljs-string">ngx_http_variable_value_t</span> <span class="hljs-string">*v,</span> <span class="hljs-string">uintptr_t</span> <span class="hljs-string">data)</span><br><span class="hljs-number">2044</span> &#123;<br><span class="hljs-string">...</span><br><span class="hljs-number">2054     </span><span class="hljs-string">tp</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_timeofday();</span> <span class="hljs-string">//</span> <span class="hljs-string">获取当前时刻</span><br><span class="hljs-number">2055</span><br><span class="hljs-number">2056     </span><span class="hljs-string">ms</span> <span class="hljs-string">=</span> <span class="hljs-string">(ngx_msec_int_t)</span> <span class="hljs-string">//</span> <span class="hljs-string">当前时刻减去开始时刻得到耗时</span><br><span class="hljs-number">2057</span>              <span class="hljs-string">((tp-&gt;sec</span> <span class="hljs-bullet">-</span> <span class="hljs-string">r-&gt;start_sec)</span> <span class="hljs-string">*</span> <span class="hljs-number">1000</span> <span class="hljs-string">+</span> <span class="hljs-string">(tp-&gt;msec</span> <span class="hljs-bullet">-</span> <span class="hljs-string">r-&gt;start_msec));</span><br><span class="hljs-number">2058     </span><span class="hljs-string">ms</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_max(ms</span>, <span class="hljs-number">0</span><span class="hljs-string">);</span><br><span class="hljs-number">2059</span><br><span class="hljs-number">2060     </span><span class="hljs-string">v-&gt;len</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_sprintf(p</span>, <span class="hljs-string">&quot;%T.%03M&quot;</span>, <span class="hljs-string">(time_t)</span> <span class="hljs-string">ms</span> <span class="hljs-string">/</span> <span class="hljs-number">1000</span>, <span class="hljs-string">ms</span> <span class="hljs-string">%</span> <span class="hljs-number">1000</span><span class="hljs-string">)</span> <span class="hljs-bullet">-</span> <span class="hljs-string">p;</span><br><span class="hljs-string">...</span><br><span class="hljs-number">2066     </span><span class="hljs-string">return</span> <span class="hljs-string">NGX_OK;</span><br><span class="hljs-number">2067</span> &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>关键在于ngx_http_variable_request_time函数的调用时机以及r-&gt;start_sec、msec(ngx_http_request_t.start_sec&#x2F;msec)的记录时机，查找源码可以发现ngx_http_request_t.start_sec的记录时间位于http&#x2F;ngx_http_request.c的ngx_http_create_request函数中，ngx_http_create_request函数会在ngx_http_wait_request_handler被调用，一步步往上追溯最后会发现，ngx_http_create_request实际是在N的监听进程与C建立TCP连接后接收到数据触发可读事件后被调用，即start_sec&#x2F;msec记录的是连接建立后收到第一个可读字节时的–此时HTTP所在的应用层还未真正读取数据，数据只是交付到了TCP所在的传输层。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// http/ngx_http_request.c</span><br><span class="hljs-number">503</span> ngx_http_request_t *<br> <span class="hljs-number">504</span> <span class="hljs-title function_ invoke__">ngx_http_create_request</span>(ngx_connection_t *c)<br> <span class="hljs-number">505</span> &#123;<br> ...<br>  <span class="hljs-number">579</span>     r<span class="hljs-punctuation">-&gt;</span>main = r;<br> <span class="hljs-number">580</span>     r<span class="hljs-punctuation">-&gt;</span>count = <span class="hljs-number">1</span>;<br> <span class="hljs-number">581</span><br> <span class="hljs-number">582</span>     tp = <span class="hljs-title function_ invoke__">ngx_timeofday</span>();<br> <span class="hljs-number">583</span>     r<span class="hljs-punctuation">-&gt;</span>start_sec = tp<span class="hljs-punctuation">-&gt;</span>sec;<br> <span class="hljs-number">584</span>     r<span class="hljs-punctuation">-&gt;</span>start_msec = tp<span class="hljs-punctuation">-&gt;</span>msec;<br> <span class="hljs-number">585</span>...<br>  <span class="hljs-number">611</span> &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>而对于ngx_http_variable_request_time的调用时机，追溯源码发现其被放置于放在ngx_http_core_module全局变量中，而ngx_http_core_module会在ngx_http_log_init函数中注册到main_conf，最终http&#x2F;ngx_http_request.c的ngx_http_free_request函数中会调用ngx_http_log_request，而后在其中通过main_conf得到log相关handler并执行，其相关代码如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">http/ngx_http_request.c</span><br><span class="hljs-number">3410 </span><span class="hljs-string">void</span><br><span class="hljs-number">3411 </span><span class="hljs-string">ngx_http_free_request(ngx_http_request_t</span> <span class="hljs-string">*r,</span> <span class="hljs-string">ngx_int_t</span> <span class="hljs-string">rc)</span><br><span class="hljs-number">3412</span> &#123;<br><span class="hljs-string">...</span><br><span class="hljs-number">3456     </span><span class="hljs-string">log-&gt;action</span> <span class="hljs-string">=</span> <span class="hljs-string">&quot;logging request&quot;</span><span class="hljs-string">;</span><br><span class="hljs-number">3457</span><br><span class="hljs-number">3458     </span><span class="hljs-string">ngx_http_log_request(r);</span><br><span class="hljs-number">3459</span><br><span class="hljs-number">3460     </span><span class="hljs-string">log-&gt;action</span> <span class="hljs-string">=</span> <span class="hljs-string">&quot;closing request&quot;</span><span class="hljs-string">;</span><br><span class="hljs-number">3461</span><br><span class="hljs-number">3462     </span><span class="hljs-string">if</span> <span class="hljs-string">(r-&gt;connection-&gt;timedout)</span> &#123;<br><span class="hljs-number">3463         </span><span class="hljs-string">clcf</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_http_get_module_loc_conf(r</span>, <span class="hljs-string">ngx_http_core_module);</span><br><span class="hljs-number">3464</span><br><span class="hljs-number">3465         </span><span class="hljs-string">if</span> <span class="hljs-string">(clcf-&gt;reset_timedout_connection)</span> &#123;<br><span class="hljs-number">3466             </span><span class="hljs-string">linger.l_onoff</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br><span class="hljs-number">3467             </span><span class="hljs-string">linger.l_linger</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br><span class="hljs-number">3468</span><br><span class="hljs-number">3469             </span><span class="hljs-string">if</span> <span class="hljs-string">(setsockopt(r-&gt;connection-&gt;fd</span>, <span class="hljs-string">SOL_SOCKET</span>, <span class="hljs-string">SO_LINGER</span>,<br><span class="hljs-number">3470</span>                            <span class="hljs-string">(const</span> <span class="hljs-string">void</span> <span class="hljs-string">*)</span> <span class="hljs-string">&amp;linger</span>, <span class="hljs-string">sizeof(struct</span> <span class="hljs-string">linger))</span> <span class="hljs-string">==</span> <span class="hljs-number">-1</span><span class="hljs-string">)</span><br><span class="hljs-number">3471</span>             &#123;<br><span class="hljs-number">3472                 </span><span class="hljs-string">ngx_log_error(NGX_LOG_ALERT</span>, <span class="hljs-string">log</span>, <span class="hljs-string">ngx_socket_errno</span>,<br><span class="hljs-number">3473</span>                               <span class="hljs-string">&quot;setsockopt(SO_LINGER) failed&quot;</span><span class="hljs-string">);</span><br><span class="hljs-number">3474</span>             &#125;<br><span class="hljs-number">3475</span>         &#125;<br><span class="hljs-number">3476</span>     &#125;<br><span class="hljs-string">...</span><br><span class="hljs-number">3500 </span><span class="hljs-string">ngx_http_log_request(ngx_http_request_t</span> <span class="hljs-string">*r)</span><br><span class="hljs-number">3501</span> &#123;<br><span class="hljs-number">3502     </span><span class="hljs-string">ngx_uint_t</span>                  <span class="hljs-string">i</span>, <span class="hljs-string">n;</span><br><span class="hljs-number">3503     </span><span class="hljs-string">ngx_http_handler_pt</span>        <span class="hljs-string">*log_handler;</span><br><span class="hljs-number">3504     </span><span class="hljs-string">ngx_http_core_main_conf_t</span>  <span class="hljs-string">*cmcf;</span><br><span class="hljs-number">3505</span><br><span class="hljs-number">3506     </span><span class="hljs-string">cmcf</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_http_get_module_main_conf(r</span>, <span class="hljs-string">ngx_http_core_module);</span><br><span class="hljs-number">3507</span><br><span class="hljs-number">3509     </span><span class="hljs-string">log_handler</span> <span class="hljs-string">=</span> <span class="hljs-string">cmcf-&gt;phases</span>[<span class="hljs-string">NGX_HTTP_LOG_PHASE</span>]<span class="hljs-string">.handlers.elts;</span><br><span class="hljs-number">3510     </span><span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">cmcf-&gt;phases</span>[<span class="hljs-string">NGX_HTTP_LOG_PHASE</span>]<span class="hljs-string">.handlers.nelts;</span><br><span class="hljs-number">3511</span><br><span class="hljs-number">3512     </span><span class="hljs-string">for</span> <span class="hljs-string">(i</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br><span class="hljs-number">3513         </span><span class="hljs-string">log_handler</span>[<span class="hljs-string">i</span>]<span class="hljs-string">(r);</span><br><span class="hljs-number">3514</span>     &#125;<br><span class="hljs-number">3515</span> &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到ngx_http_log_request正好在使用setsockopt优雅关闭连接前调用，<strong>由此得出结论,request_time起始时间为N接收到TCP包触发第一次可读event后，应用层正式读取数据前的时刻，而结束时间为N发送完全部数据给C，调用setsockopt优雅关闭连接前一时刻，即包括阶段2~9，注意这里N认为的发送完成是指N调用send发送完成返回，只代表了数据已经存到了协议栈buffer之中，而不是代表已经发送到C并收到C的ack，所以request_time仅统计到N认为自己发送完成时的时间，不包括数据实际发送到C并被C接收ack时间，更不包括TCP四次挥手的时间了。</strong></p>
+<h3 id="upstream-connect-time"><a href="#upstream-connect-time" class="headerlink" title="upstream_connect_time"></a><strong>upstream_connect_time</strong></h3><p>upstream_connect_time、upstream_header_time与upstream_response_time三个指标均属于ngx_http_upstream模块，对应nginx中的connect_time、header_time、response_time三个变量，其初始化代码位于ngx_http_upstream.c中的ngx_http_upstream_connect函数，相关代码如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">http/ngx_http_upstream.c</span><br><span class="hljs-number">1328 </span><span class="hljs-string">static</span> <span class="hljs-string">void</span><br><span class="hljs-number">1329 </span><span class="hljs-string">ngx_http_upstream_connect(ngx_http_request_t</span> <span class="hljs-string">*r,</span> <span class="hljs-string">ngx_http_upstream_t</span> <span class="hljs-string">*u)</span><br><span class="hljs-number">1330</span> &#123;<br><span class="hljs-number">1331     </span><span class="hljs-string">ngx_int_t</span>          <span class="hljs-string">rc;</span><br><span class="hljs-number">1332     </span><span class="hljs-string">ngx_connection_t</span>  <span class="hljs-string">*c;</span><br><span class="hljs-string">...</span><br><span class="hljs-number">1346</span><br><span class="hljs-number">1347     </span><span class="hljs-string">ngx_memzero(u-&gt;state</span>, <span class="hljs-string">sizeof(ngx_http_upstream_state_t));</span><br><span class="hljs-number">1348</span><br><span class="hljs-number">1349     </span><span class="hljs-string">u-&gt;state-&gt;response_time</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_current_msec;</span><br><span class="hljs-number">1350     </span><span class="hljs-string">u-&gt;state-&gt;connect_time</span> <span class="hljs-string">=</span> <span class="hljs-string">(ngx_msec_t)</span> <span class="hljs-number">-1</span><span class="hljs-string">;</span><br><span class="hljs-number">1351     </span><span class="hljs-string">u-&gt;state-&gt;header_time</span> <span class="hljs-string">=</span> <span class="hljs-string">(ngx_msec_t)</span> <span class="hljs-number">-1</span><span class="hljs-string">;</span><br><span class="hljs-number">1352</span><br><span class="hljs-number">1353     </span><span class="hljs-string">rc</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_event_connect_peer(&amp;u-&gt;peer);</span><br><span class="hljs-number">1354</span><br><span class="hljs-number">1355     </span><span class="hljs-string">ngx_log_debug1(NGX_LOG_DEBUG_HTTP</span>, <span class="hljs-string">r-&gt;connection-&gt;log</span>, <span class="hljs-number">0</span>,<br><span class="hljs-number">1356</span>                    <span class="hljs-string">&quot;http upstream connect: %i&quot;</span>, <span class="hljs-string">rc);</span><br><span class="hljs-string">...</span><br><span class="hljs-number">1467     </span><span class="hljs-string">ngx_http_upstream_send_request(r</span>, <span class="hljs-string">u</span>, <span class="hljs-number">1</span><span class="hljs-string">);</span><br><span class="hljs-number">1468</span> &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到其初始值设置正好处于ngx_event_connect_peer函数前，即N即将开始与S建立连接之前，注意此时response_time被设置为了当前时刻时间，而后继续追溯源码可以发现connect_time最终在ngx_http_upstream_connect函数末尾调用的ngx_http_upstream_send_request函数中进行了赋值，相关代码如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">http/ngx_http_upstream.c</span><br><span class="hljs-number">1782 </span><span class="hljs-string">static</span> <span class="hljs-string">void</span><br><span class="hljs-number">1783 </span><span class="hljs-string">ngx_http_upstream_send_request(ngx_http_request_t</span> <span class="hljs-string">*r,</span> <span class="hljs-string">ngx_http_upstream_t</span> <span class="hljs-string">*u,</span><br><span class="hljs-number">1784     </span><span class="hljs-string">ngx_uint_t</span> <span class="hljs-string">do_write)</span><br><span class="hljs-number">1785</span> &#123;<br><span class="hljs-string">...</span><br><span class="hljs-number">1791     </span><span class="hljs-string">ngx_log_debug0(NGX_LOG_DEBUG_HTTP</span>, <span class="hljs-string">c-&gt;log</span>, <span class="hljs-number">0</span>,<br><span class="hljs-number">1792</span>                    <span class="hljs-string">&quot;http upstream send request&quot;</span><span class="hljs-string">);</span><br><span class="hljs-number">1793</span><br><span class="hljs-number">1794     </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;state-&gt;connect_time</span> <span class="hljs-string">==</span> <span class="hljs-string">(ngx_msec_t)</span> <span class="hljs-number">-1</span><span class="hljs-string">)</span> &#123;<br><span class="hljs-number">1795         </span><span class="hljs-string">u-&gt;state-&gt;connect_time</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_current_msec</span> <span class="hljs-bullet">-</span> <span class="hljs-string">u-&gt;state-&gt;response_time;</span><br><span class="hljs-number">1796</span>     &#125;<br><span class="hljs-string">...</span><br><span class="hljs-string">...</span><br><span class="hljs-number">1864     </span><span class="hljs-string">if</span> <span class="hljs-string">(c-&gt;read-&gt;ready)</span> &#123;<br><span class="hljs-number">1865         </span><span class="hljs-string">ngx_http_upstream_process_header(r</span>, <span class="hljs-string">u);</span><br><span class="hljs-number">1866         </span><span class="hljs-string">return;</span><br><span class="hljs-number">1867</span>     &#125;<br><span class="hljs-number">1868</span> &#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>由此可以得出结论，upstream_connect_time起始时刻为N将与S建立连接前一刻，结束时刻为N与S建立连接成功后，即包括阶段3。</strong></p>
+<h3 id="upstream-header-time"><a href="#upstream-header-time" class="headerlink" title="upstream_header_time"></a><strong>upstream_header_time</strong></h3><p>接下来探究upstream_header_time，可在ngx_http_upstream_send_request函数末尾调用的ngx_http_upstream_process_header中发现header_time的赋值语句：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-number">2047 </span><span class="hljs-string">static</span> <span class="hljs-string">void</span><br><span class="hljs-number">2048 </span><span class="hljs-string">ngx_http_upstream_process_header(ngx_http_request_t</span> <span class="hljs-string">*r,</span> <span class="hljs-string">ngx_http_upstream_t</span> <span class="hljs-string">*u)</span><br><span class="hljs-number">2049</span> &#123;<br><span class="hljs-string">...</span><br><span class="hljs-number">2058</span><br><span class="hljs-number">2059     </span><span class="hljs-string">c-&gt;log-&gt;action</span> <span class="hljs-string">=</span> <span class="hljs-string">&quot;reading response header from upstream&quot;</span><span class="hljs-string">;</span><br><span class="hljs-string">...</span><br><span class="hljs-number">2104     </span><span class="hljs-string">for</span> <span class="hljs-string">(</span> <span class="hljs-string">;;</span> <span class="hljs-string">)</span> &#123;<br><span class="hljs-number">2105</span><br><span class="hljs-number">2106         </span><span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">c-&gt;recv(c</span>, <span class="hljs-string">u-&gt;buffer.last</span>, <span class="hljs-string">u-&gt;buffer.end</span> <span class="hljs-bullet">-</span> <span class="hljs-string">u-&gt;buffer.last);</span><br><span class="hljs-string">...</span><br>&#125;<br><span class="hljs-string">...</span><br><span class="hljs-number">2172     </span><span class="hljs-string">u-&gt;state-&gt;header_time</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_current_msec</span> <span class="hljs-bullet">-</span> <span class="hljs-string">u-&gt;state-&gt;response_time;</span><br><span class="hljs-string">...</span><br><span class="hljs-number">2184</span><br><span class="hljs-number">2185     </span><span class="hljs-string">if</span> <span class="hljs-string">(ngx_http_upstream_process_headers(r</span>, <span class="hljs-string">u)</span> <span class="hljs-type">!=</span> <span class="hljs-string">NGX_OK)</span> &#123;<br><span class="hljs-number">2186         </span><span class="hljs-string">return;</span><br><span class="hljs-number">2187</span>     &#125;<br><span class="hljs-string">...</span><br><br></code></pre></td></tr></table></figure>
+
+<p><strong>由此可得出结论，即header_time起始时刻应为N与S将建立连接前一刻，结束时刻为建立连接成功并在应用层接收header数据完成，即阶段3~7。</strong></p>
+<h3 id="upstream-response-time"><a href="#upstream-response-time" class="headerlink" title="upstream_response_time"></a><strong>upstream_response_time</strong></h3><p>最后探究upstream_response_time，追溯代码可以发现response_time最终在ngx_http_upstream_finalize_request函数中被赋值，相关代码如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">http/ngx_http_upstream.c</span><br><span class="hljs-number">4064 </span><span class="hljs-string">static</span> <span class="hljs-string">void</span><br><span class="hljs-number">4065 </span><span class="hljs-string">ngx_http_upstream_finalize_request(ngx_http_request_t</span> <span class="hljs-string">*r,</span><br><span class="hljs-number">4066     </span><span class="hljs-string">ngx_http_upstream_t</span> <span class="hljs-string">*u,</span> <span class="hljs-string">ngx_int_t</span> <span class="hljs-string">rc)</span><br><span class="hljs-number">4067</span> &#123;<br><span class="hljs-string">...</span><br><span class="hljs-number">4086</span><br><span class="hljs-number">4087     </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;state</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">u-&gt;state-&gt;response_time)</span> &#123;<br><span class="hljs-number">4088         </span><span class="hljs-string">u-&gt;state-&gt;response_time</span> <span class="hljs-string">=</span> <span class="hljs-string">ngx_current_msec</span> <span class="hljs-bullet">-</span> <span class="hljs-string">u-&gt;state-&gt;response_time;</span><br><span class="hljs-number">4089</span><br><span class="hljs-number">4090         </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;pipe</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">u-&gt;pipe-&gt;read_length)</span> &#123;<br><span class="hljs-number">4091             </span><span class="hljs-string">u-&gt;state-&gt;response_length</span> <span class="hljs-string">=</span> <span class="hljs-string">u-&gt;pipe-&gt;read_length;</span><br><span class="hljs-number">4092</span>         &#125;<br><span class="hljs-number">4093</span>     &#125;<br><span class="hljs-number">4094</span><br><span class="hljs-number">4095     </span><span class="hljs-string">u-&gt;finalize_request(r</span>, <span class="hljs-string">rc);</span><br><span class="hljs-number">4096</span><br><span class="hljs-number">4097     </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;peer.free</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">u-&gt;peer.sockaddr)</span> &#123;<br><span class="hljs-number">4098         </span><span class="hljs-string">u-&gt;peer.free(&amp;u-&gt;peer</span>, <span class="hljs-string">u-&gt;peer.data</span>, <span class="hljs-number">0</span><span class="hljs-string">);</span><br><span class="hljs-number">4099         </span><span class="hljs-string">u-&gt;peer.sockaddr</span> <span class="hljs-string">=</span> <span class="hljs-literal">NULL</span><span class="hljs-string">;</span><br><span class="hljs-number">4100</span>     &#125;<br><span class="hljs-number">4101</span><br><span class="hljs-number">4102     </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;peer.connection)</span> &#123;<br><span class="hljs-number">4103</span><br><span class="hljs-number">4104</span> <span class="hljs-comment">#if (NGX_HTTP_SSL)</span><br><span class="hljs-number">4105</span><br><span class="hljs-attr">4106         /* TODO:</span> <span class="hljs-string">do</span> <span class="hljs-string">not</span> <span class="hljs-string">shutdown</span> <span class="hljs-string">persistent</span> <span class="hljs-string">connection</span> <span class="hljs-string">*/</span><br><span class="hljs-number">4107</span><br><span class="hljs-number">4108         </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;peer.connection-&gt;ssl)</span> &#123;<br><span class="hljs-number">4109</span><br><span class="hljs-number">4110</span>             <span class="hljs-string">/*</span><br><span class="hljs-number">4111</span>              <span class="hljs-string">*</span> <span class="hljs-string">We</span> <span class="hljs-string">send</span> <span class="hljs-string">the</span> <span class="hljs-string">&quot;close notify&quot;</span> <span class="hljs-string">shutdown</span> <span class="hljs-string">alert</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">upstream</span> <span class="hljs-string">only</span><br><span class="hljs-number">4112</span>              <span class="hljs-string">*</span> <span class="hljs-string">and</span> <span class="hljs-string">do</span> <span class="hljs-string">not</span> <span class="hljs-string">wait</span> <span class="hljs-string">its</span> <span class="hljs-string">&quot;close notify&quot;</span> <span class="hljs-string">shutdown</span> <span class="hljs-string">alert.</span><br><span class="hljs-number">4113</span>              <span class="hljs-string">*</span> <span class="hljs-string">It</span> <span class="hljs-string">is</span> <span class="hljs-string">acceptable</span> <span class="hljs-string">according</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">TLS</span> <span class="hljs-string">standard.</span><br><span class="hljs-number">4114</span>              <span class="hljs-string">*/</span><br><span class="hljs-number">4115</span><br><span class="hljs-number">4116             </span><span class="hljs-string">u-&gt;peer.connection-&gt;ssl-&gt;no_wait_shutdown</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br><span class="hljs-number">4117</span><br><span class="hljs-number">4118</span>             <span class="hljs-string">(void)</span> <span class="hljs-string">ngx_ssl_shutdown(u-&gt;peer.connection);</span><br><span class="hljs-number">4119</span>         &#125;<br><span class="hljs-number">4120</span> <span class="hljs-comment">#endif</span><br><span class="hljs-number">4121</span><br><span class="hljs-number">4122         </span><span class="hljs-string">ngx_log_debug1(NGX_LOG_DEBUG_HTTP</span>, <span class="hljs-string">r-&gt;connection-&gt;log</span>, <span class="hljs-number">0</span>,<br><span class="hljs-number">4123</span>                        <span class="hljs-string">&quot;close http upstream connection: %d&quot;</span>,<br><span class="hljs-number">4124                        </span><span class="hljs-string">u-&gt;peer.connection-&gt;fd);</span><br><span class="hljs-number">4125</span><br><span class="hljs-number">4126         </span><span class="hljs-string">if</span> <span class="hljs-string">(u-&gt;peer.connection-&gt;pool)</span> &#123;<br><span class="hljs-number">4127             </span><span class="hljs-string">ngx_destroy_pool(u-&gt;peer.connection-&gt;pool);</span><br><span class="hljs-number">4128</span>         &#125;<br><span class="hljs-number">4129</span><br><span class="hljs-number">4130         </span><span class="hljs-string">ngx_close_connection(u-&gt;peer.connection);</span><br><span class="hljs-number">4131</span>     &#125;<br><span class="hljs-string">...</span><br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到u-&gt;state-&gt;response_time &#x3D; ngx_current_msec - u-&gt;state-&gt;response_time; 在ngx_close_connection之前执行，<strong>由此可以得出结论，upstream_response_time起始时刻为N与S将建立连接前一刻，结束时间为N接收完S全部响应数据将关闭连接前一刻，即阶段3~8。</strong></p>
+<h2 id="最终结论"><a href="#最终结论" class="headerlink" title="最终结论"></a><strong>最终结论</strong></h2><p>经过源码追溯最终可以得出request_time、upstream_response_time、upstream_connect_time与upstream_header_time四个指标的关系为:</p>
+<p><strong>upstream_header_time &#x3D; upstream_connect_time(阶段3) + N向S发送数据被接收完成时间(阶段4) + S业务代码处理数据返回并被N接收完header部分数据的时间(阶段5~7)</strong></p>
+<p><strong>upstream_response_time &#x3D; upstream_header_time + N接收完S除header部分剩余全部数据的时间(阶段8)</strong></p>
+<p><strong>request_time &#x3D; N开始接收C全部数据并完成的时间(阶段2) + upstream_response_time + N向C send响应数据并完成(阶段9)</strong></p>
+<p>至于一开始对于文档解释request_time 接收第一个字节的、发送完最后一个字节的具体定义，在阅读过程中也有了答案：</p>
+<p>HTTP是应用层协议，其建立于传输层的TCP协议之上，而TCP是保证有序和可靠的–其每一个有效数据包都必须收到对端的ACK确认才算发送成功，因此站在N的角度看待数据接收与发送完成，可以得出以下结论：</p>
+<p>其所谓的接收第一个字节时刻必然是属于C发向N的第一个TCP有效数据包被接收时刻–不会包括三次握手纯SYN&#x2F;ACK包–除非第三个握手包已经带了有效数据。</p>
+<p>而所谓的发送完最后一个字节时刻，则由于N使用send发送响应给C，指的是调用send函数发送完数据的时刻–仅代表数据已成功写入协议栈buffer，并不代表N已经接收到了C确认收到所有数据的ack。</p>
+<p>转载请注明出处，原文地址： <a target="_blank" rel="noopener" href="https://www.cnblogs.com/AcAc-t/p/nginx_request_time_upstream_respone_time_analysis.html">https://www.cnblogs.com/AcAc-t/p/nginx_request_time_upstream_respone_time_analysis.html</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a><strong>参考</strong></h2><p><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_log_module.html">http://nginx.org/en/docs/http/ngx_http_log_module.html</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="print-no-link">#知识梳理</a>
+      
+        <a href="/tags/Nginx/" class="print-no-link">#Nginx</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Nginx 超时问题</div>
+      <div>https://blog.740777352.xyz/2025/02/13/nginx超时问题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" title="Nginx 跨域配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Nginx 跨域配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/13/etcd-tools/" title="etcd 工具和客户端库">
+                        <span class="hidden-mobile">etcd 工具和客户端库</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
