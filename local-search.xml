@@ -4,6 +4,29 @@
   
   
   <entry>
+    <title>etcd 工具和客户端库</title>
+    <link href="/2025/02/13/etcd-tools/"/>
+    <url>/2025/02/13/etcd-tools/</url>
+    
+    <content type="html"><![CDATA[<p>以下是关于 etcd 工具和客户端库的汇总<br>翻译自：<a href="https://etcd.io/docs/v3.5/integrations/">https://etcd.io/docs/v3.5/integrations/</a></p><h3 id="库和工具"><a href="#库和工具" class="headerlink" title="库和工具"></a>库和工具</h3><p>etcd 工具和客户端库列表。<br>请注意，以下提到的第三方库和工具（不托管在 <a href="https://github.com/etcd-io">https://github.com/etcd-io</a> 上）没有经过 etcd 团队的测试和维护。在使用它们之前，建议用户先阅读和调查这些库和工具。</p><h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><ul><li><strong>etcdctl</strong> - etcd 的命令行客户端。</li><li><strong>etcd-dump</strong> - 用于转储&#x2F;恢复 etcd 的命令行工具。</li><li><strong>etcd-fs</strong> - 基于 FUSE 的 etcd 文件系统。</li><li><strong>etcddir</strong> - 实时同步 etcd 和本地目录，适用于 Windows 和 Linux。</li><li><strong>etcd-browser</strong> - 一个基于 AngularJS 的 etcd 网页键值编辑器。</li><li><strong>etcd-lock</strong> - 使用 etcd 实现的主节点选举和分布式读&#x2F;写锁，支持 v2。</li><li><strong>etcd-console</strong> - 一个基于 PHP 的 etcd 网页键值编辑器。</li><li><strong>etcd-viewer</strong> - 用 Java 编写的 etcd 键值存储编辑&#x2F;查看器。</li><li><strong>etcdtool</strong> - 以 JSON&#x2F;YAML&#x2F;TOML 格式导出&#x2F;导入&#x2F;编辑 etcd 目录，并使用 JSON 模式验证目录。</li><li><strong>etcdloadtest</strong> - 一个用于 etcd 版本 3.0 及以上的命令行负载测试客户端。</li><li><strong>lucas</strong> - 一个用于 Kubernetes etcd3.0+ 集群的基于 Web 的键值查看器。</li><li><strong>etcd-manager</strong> - 一个现代、效率高、跨平台且免费的 etcd 3.x GUI 和客户端工具，适用于 Windows、Linux 和 Mac。</li><li><strong>etcd-backup-restore</strong> - 定期增量备份和恢复 etcd 的工具。</li><li><strong>etcd-druid</strong> - 用于部署 etcd 集群并管理日常运维操作的 Kubernetes 操作符。</li><li><strong>etcdadm</strong> - 用于操作 etcd 集群的命令行工具。</li><li><strong>etcd-defrag</strong> - 一个更易用且更智能的 etcd 碎片整理工具。</li><li><strong>etcdhelper</strong> - IntelliJ 平台的 etcd 插件。</li></ul><h4 id="库"><a href="#库" class="headerlink" title="库"></a>库</h4><p>以下部分按语言列出了 etcd 客户端库。</p><h5 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h5><ul><li><strong>etcd&#x2F;client&#x2F;v3</strong> - 官方维护的 v3 Go 客户端。</li><li><strong>etcd&#x2F;client&#x2F;v2</strong> - 官方维护的 v2 Go 客户端。</li><li><strong>go-etcd</strong> - 已弃用的官方客户端，可能对旧版本（&lt;2.0.0）的 etcd 有用。</li><li><strong>encWrapper</strong> - etcd 客户端键 API&#x2F;KV 的加密包装器。</li></ul><h5 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h5><ul><li><strong>coreos&#x2F;jetcd</strong> - 支持 v3。</li><li><strong>boonproject&#x2F;etcd</strong> - 支持 v2，异步&#x2F;同步和等待。</li><li><strong>justinsb&#x2F;jetcd</strong></li><li><strong>diwakergupta&#x2F;jetcd</strong> - 支持 v2。</li><li><strong>jurmous&#x2F;etcd4j</strong> - 支持 v2，异步&#x2F;同步、等待和 SSL。</li><li><strong>AdoHe&#x2F;etcd4j</strong> - 支持 v2（增强以适用于真实生产集群）。</li><li><strong>cdancy&#x2F;etcd-rest</strong> - 使用 jclouds 提供完整的 v2 API 实现。</li><li><strong>IBM&#x2F;etcd-java</strong></li></ul><h5 id="更多语言客户端库"><a href="#更多语言客户端库" class="headerlink" title="更多语言客户端库"></a>更多语言客户端库</h5><p>涉及 Scala、Perl、Python、Node.js、Ruby、C、C++、Clojure、Erlang、Elixir、.NET、PHP、Haskell、R、Nim、Tcl、Rust、Gradle、Lua 和部署工具等。</p><h3 id="使用-etcd-的项目"><a href="#使用-etcd-的项目" class="headerlink" title="使用 etcd 的项目"></a>使用 etcd 的项目</h3><ul><li><strong>etcd Raft users</strong> - 使用 etcd 的 Raft 库实现的项目。</li><li><strong>apache&#x2F;celix</strong> - 一种适用于 C 和 C++ 的 OSGi 规范实现。</li><li><strong>binocarlos&#x2F;yoda</strong> - etcd 加 ZeroMQ。</li><li><strong>blox&#x2F;blox</strong> - 为 AWS ECS 提供的开源容器管理和编排项目合集。</li><li><strong>calavera&#x2F;active-proxy</strong> - 使用 etcd 配置的 HTTP 代理。</li><li><strong>chain&#x2F;chain</strong> - 设计用于操作和连接高扩展性许可区块链网络的软件。</li><li>其他项目包括 Kubernetes、Vitess、Uber M3 和 Apache ArangoDB 等等。</li></ul><p>这些描述展示了 etcd 各种工具、库及其广泛应用，以满足不同的技术需求和项目需求。</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>etcd</tag>
+      
+      <tag>工具</tag>
+      
+      <tag>客户端库</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>etcdctl命令整理</title>
     <link href="/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/"/>
     <url>/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</url>
