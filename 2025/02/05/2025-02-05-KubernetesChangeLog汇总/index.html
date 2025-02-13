@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kubernetes 1.24发布日期： 2022年5月3日主要更新：  移除 Dockershim：  v1.20 中被弃用的 Dockershim 组件已从 kubelet 中移除。用户需迁移至其他受支持的容器运行时，如 containerd 或 CRI-O。 默认关闭 Beta API： 的 Beta API 默认不再启用，现有的 Beta API 及其更新版本仍保持启用。 签署发布工件：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KubernetesChangelogs">
+<meta property="og:url" content="http://example.com/2025/02/05/2025-02-05-KubernetesChangeLog%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Kubernetes 1.24发布日期： 2022年5月3日主要更新：  移除 Dockershim：  v1.20 中被弃用的 Dockershim 组件已从 kubelet 中移除。用户需迁移至其他受支持的容器运行时，如 containerd 或 CRI-O。 默认关闭 Beta API： 的 Beta API 默认不再启用，现有的 Beta API 及其更新版本仍保持启用。 签署发布工件：">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-02-05T09:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-05T09:09:47.103Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="知识梳理">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>KubernetesChangelogs - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="KubernetesChangelogs"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-05 17:00" pubdate>
+          February 5, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">KubernetesChangelogs</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="Kubernetes-1-24"><a href="#Kubernetes-1-24" class="headerlink" title="Kubernetes 1.24"></a><strong>Kubernetes 1.24</strong></h3><p><strong>发布日期：</strong> 2022年5月3日<br><strong>主要更新：</strong></p>
+<ul>
+<li><strong>移除 Dockershim：</strong>  v1.20 中被弃用的 Dockershim 组件已从 kubelet 中移除。用户需迁移至其他受支持的容器运行时，如 containerd 或 CRI-O。</li>
+<li><strong>默认关闭 Beta API：</strong> 的 Beta API 默认不再启用，现有的 Beta API 及其更新版本仍保持启用。</li>
+<li><strong>签署发布工件：</strong> 入了使用 cosign 对发布工件进行签名的机制，增强了软件供应链的安全性。</li>
+<li><strong>OpenAPI v3 支持：</strong> 供了以 OpenAPI v3 格式发布 API 的 Beta 支持。</li>
+<li><strong>存储容量跟踪和卷扩展：</strong> 储容量跟踪和卷扩展功能已达到稳定版，改进了存储管理能力。</li>
+<li><strong>非抢占优先级：</strong>  PriorityClasses 添加了非抢占选项，提供了更灵活的调度策略。</li>
+<li><strong>存储插件迁移：</strong> zure Disk 和 OpenStack Cinder 插件已迁移至 CSI 驱动程序。</li>
+<li><strong>gRPC 探针：</strong> RPC 探测功能升级至 Beta，允许为 gRPC 应用程序配置启动、存活和就绪性探测。</li>
+<li><strong>Kubelet 凭证提供者：</strong> ubelet 对镜像凭证提供者的支持已升级到 Beta，允许动态检索容器镜像仓库的凭据。</li>
+<li><strong>上下文日志记录：</strong> 入了上下文日志记录功能，使函数调用者能够控制日志记录的各个方面。</li>
+<li><strong>避免服务 IP 分配冲突：</strong> 入了新的功能，允许为服务的静态 IP 地址分配软保留范围，降低冲突风险。</li>
+<li><strong>移除动态 Kubelet 配置：</strong> 态 Kubelet 配置已从 kubelet 中移除，并计划在 Kubernetes 1.26 中从 API 服务器中移除。<br>多详细信息，请参阅官方发布公告。citeturn0search10</li>
+</ul>
+<hr>
+<h3 id="Kubernetes-1-25"><a href="#Kubernetes-1-25" class="headerlink" title="Kubernetes 1.25"></a><strong>Kubernetes 1.25</strong></h3><p><strong>发布日期：</strong> 2022年8月23日<br><strong>主要更新：</strong></p>
+<ul>
+<li><strong>Pod 安全性准入：</strong> odSecurity 准入控制器已达到稳定版，提供了基于命名空间标签的安全策略。</li>
+<li><strong>容器运行时接口（CRI）增强：</strong>  CRI 进行了改进，增强了对多种容器运行时的兼容性。</li>
+<li><strong>存储功能增强：</strong> SI 插件支持更多的存储后端，并增强了与动态卷供给的兼容性。</li>
+<li><strong>资源请求和限制优化：</strong> 进了资源请求与限制的计算和调度，提升了调度器的资源分配能力。</li>
+<li><strong>弃用 PodSecurityPolicy（PSP）：</strong> SP 功能被正式弃用，用户应迁移到新的 PodSecurity 策略。</li>
+<li><strong>移除 <code>--cloud-provider</code> 标志：</strong> –cloud-provider&#96; 标志被移除，用户需迁移到新的云提供商接口。</li>
+<li><strong>服务账户权限策略调整：</strong> 服务账户的权限策略进行了改进，部分权限不再默认开放。</li>
+<li><strong>API 版本更新：</strong> 些旧的 API 版本被废弃，用户需迁移到更稳定的版本。<br>多详细信息，请参阅官方发布公告。</li>
+</ul>
+<hr>
+<h3 id="Kubernetes-1-26"><a href="#Kubernetes-1-26" class="headerlink" title="Kubernetes 1.26"></a><strong>Kubernetes 1.26</strong></h3><p><strong>发布日期：</strong> 2022年12月8日<br><strong>主要更新：</strong></p>
+<ul>
+<li><strong>原生边车容器支持：</strong> 入了原生的边车容器支持，简化了边车容器的管理。</li>
+<li><strong>Job 控制器增强：</strong>  Job 控制器进行了增强，支持更多的调度和重试策略。</li>
+<li><strong>存储功能增强：</strong> 入了对新的存储卷模式和快照功能的支持。</li>
+<li><strong>弃用旧版 API：</strong> 一步弃用了旧的 API 版本，用户需尽快迁移到新的 API。</li>
+<li><strong>安全性增强：</strong> 强了对证书和密钥管理的控制，提升了集群的安全性。<br>多详细信息，请参阅官方发布公告。</li>
+</ul>
+<hr>
+<h3 id="Kubernetes-1-27"><a href="#Kubernetes-1-27" class="headerlink" title="Kubernetes 1.27"></a><strong>Kubernetes 1.27</strong></h3><p><strong>发布日期：</strong> 2023年4月11日<br><strong>主要更新：</strong></p>
+<ul>
+<li><strong>控制器管理器的领导者迁移：</strong> ube-controller-manager 和 cloud-controller-manager 可以在高可用控制平面中重新分配新的控制器，无需停机。</li>
+<li><strong>Pod 亲和性 NamespaceSelector：</strong>  Pod 亲和性&#x2F;反亲和性规则添加了 <code>namespaceSelector</code> 字段。</li>
+<li><strong>弃用旧版 API：</strong> 续弃用旧的 API 版本，用户需迁移到新的 API。</li>
+<li><strong>安全性增强：</strong> 进了对服务账户和 RBAC 的支持，增强了权限管理。<br>多详细信息，请参阅官方发布公告。</li>
+</ul>
+<hr>
+<h3 id="Kubernetes-1-28"><a href="#Kubernetes-1-28" class="headerlink" title="Kubernetes 1.28"></a><strong>Kubernetes 1.28</strong></h3><p><strong>发布日期：</strong> 2023年8月16日<br><strong>主要更新：</strong></p>
+<ol>
+<li><strong>节点非体面关闭功能进入 GA（正式发布）阶段：</strong><ul>
+<li>特性允许在节点意外关闭或不可恢复时，有状态工作负载能够在其他节点上重新启动，确保应用的高可用性。citeturn0search0</li>
+</ul>
+</li>
+<li><strong>对 Linux 上交换内存的 Beta 支持：</strong><ul>
+<li>入了对 Linux 节点上交换内存的支持，提升了节点的内存管理能力，增强了系统的稳定性。citeturn0search2</li>
+</ul>
+</li>
+<li><strong>Job 失效处理的改进：</strong><ul>
+<li>入了 Pod 更换策略和基于索引的回退限制，改进了对批处理作业中 Pod 失效的处理，提高了批处理任务的可靠性。citeturn0search6</li>
+</ul>
+</li>
+<li><strong>节点 podresources API 正式发布：</strong><ul>
+<li>API 允许用户查询节点上分配给容器的资源信息，增强了对资源分配的可观测性。citeturn0search14</li>
+</ul>
+</li>
+<li><strong>用于改进集群安全升级的新机制（Alpha）：</strong><ul>
+<li>入了混合版本代理特性，允许在集群升级期间，不同版本的 API 服务器之间正确处理资源请求，确保升级过程的平滑和安全。citeturn0search13</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="Kubernetes-1-29"><a href="#Kubernetes-1-29" class="headerlink" title="Kubernetes 1.29"></a><strong>Kubernetes 1.29</strong></h3><p><strong>发布日期：</strong> 2023年12月13日<br><strong>主要更新：</strong></p>
+<ol>
+<li><strong>引入 nftables 作为 kube-proxy 的新后端（Alpha）：</strong><ul>
+<li>kube-proxy 添加了基于 nftables 的后端，以替代传统的 iptables，提供更好的性能和可扩展性。citeturn0search4</li>
+</ul>
+</li>
+<li><strong>Sidecar 容器功能进入 Beta 阶段并默认启用：</strong><ul>
+<li>idecar 容器运行模式进入了 Beta 阶段，允许用户明确定义 Sidecar 容器的启动顺序和生命周期管理，增强了对应用程序的支持。citeturn0search11</li>
+</ul>
+</li>
+<li><strong>KMS v2 静态加密功能正式发布：</strong><ul>
+<li>MS v2 提供了性能提升、密钥轮换和可观测性方面的改进，为集群中的数据加密提供了更可靠的解决方案。citeturn0search7</li>
+</ul>
+</li>
+<li><strong>ReadWriteOncePod 持久卷访问模式达到稳定版：</strong><ul>
+<li>入了新的持久卷访问模式，确保在整个集群中，只有一个 Pod 可以读写特定的 PVC，增强了数据的安全性和一致性。citeturn0search10</li>
+</ul>
+</li>
+<li><strong>上下文日志记录功能的增强：</strong><ul>
+<li>进了日志记录机制，引入了上下文日志记录功能，提供了更好的故障排除能力和增强的日志记录。citeturn0search3</li>
+</ul>
+</li>
+<li><strong>Service 负载均衡器 IP 模式（Alpha）：</strong><ul>
+<li>入了新的 Alpha 特性，允许用户配置 Service 的负载均衡器 IP 模式，提供了更灵活的流量管理方式。citeturn0search4</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>抱歉之前的总结遗漏了 Kubernetes 1.30 和 1.31 版本的更新日志。以下是对这两个版本的中文总结：</p>
+<hr>
+<h3 id="Kubernetes-1-30"><a href="#Kubernetes-1-30" class="headerlink" title="Kubernetes 1.30"></a><strong>Kubernetes 1.30</strong></h3><p><strong>发布日期：</strong> 2024年3月12日<br><strong>主要更新：</strong></p>
+<ol>
+<li><strong>动态资源分配（DRA）结构化参数：</strong><ul>
+<li>DRA 进行了扩展，引入了结构化参数支持，增强了资源请求的透明性和可管理性。</li>
+</ul>
+</li>
+<li><strong>节点交换内存（Swap）支持：</strong><ul>
+<li>进了 Linux 节点的交换内存支持，默认启用了 <code>NodeSwap</code> 特性门控，并将默认行为设置为 <code>NoSwap</code> 模式，提升了系统稳定性。</li>
+</ul>
+</li>
+<li><strong>用户命名空间支持：</strong><ul>
+<li>用户命名空间的支持升级至 Beta，允许在容器内以非特权用户运行进程，增强了安全性。</li>
+</ul>
+</li>
+<li><strong>结构化身份认证配置：</strong><ul>
+<li>入了基于文件的身份认证配置，支持配置多个 JWT 认证组件，提供了更灵活的认证机制。</li>
+</ul>
+</li>
+<li><strong>基于容器资源指标的 Pod 自动扩缩容：</strong><ul>
+<li>许根据各个容器的资源使用情况配置自动扩缩容策略，提升了资源利用效率。</li>
+</ul>
+</li>
+<li><strong>在准入控制中使用 CEL：</strong><ul>
+<li>成了通用表达式语言（CEL）用于准入控制，提供了更动态和细粒度的策略控制能力。<br>多详细信息，请参阅官方发布公告。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="Kubernetes-1-31"><a href="#Kubernetes-1-31" class="headerlink" title="Kubernetes 1.31"></a><strong>Kubernetes 1.31</strong></h3><p><strong>发布日期：</strong> 2024年8月13日<br><strong>主要更新：</strong></p>
+<ol>
+<li><strong>AppArmor 支持：</strong><ul>
+<li>ubernetes 对 AppArmor 的支持已达到稳定版，用户可以通过在容器的 <code>securityContext</code> 中设置 <code>appArmorProfile.type</code> 字段来启用 AppArmor。</li>
+</ul>
+</li>
+<li><strong>改进的入站连接可靠性：</strong><ul>
+<li>ube-proxy 增强了对 <code>type: LoadBalancer</code> 和 <code>externalTrafficPolicy: Cluster</code> 服务的入站连接可靠性，减少了节点终止时的流量丢失。</li>
+</ul>
+</li>
+<li><strong>持久卷阶段转换时间：</strong><ul>
+<li>入了 <code>PersistentVolumeStatus</code> 的 <code>lastTransitionTime</code> 字段，记录持久卷状态转换的时间戳，便于监控和调试。</li>
+</ul>
+</li>
+<li><strong>对 OCI 镜像卷的支持：</strong><ul>
+<li>入了 Alpha 特性，允许在 Pod 中直接使用 OCI 镜像作为只读卷，简化了 AI&#x2F;ML 工作流中的数据访问。</li>
+</ul>
+</li>
+<li><strong>nftables 后端：</strong><ul>
+<li>ube-proxy 的 nftables 后端晋级为 Beta，提供了比 iptables 更好的性能和可扩展性。</li>
+</ul>
+</li>
+<li><strong>弃用和移除：</strong><ul>
+<li>cgroup v1 的支持转为维护模式，建议用户迁移到 cgroup v2。   - 除了 CephFS 和 Ceph RBD 树内卷插件，用户应迁移到相应的 CSI 驱动程序。   - 用了节点的 <code>status.nodeInfo.kubeProxyVersion</code> 字段，并将在未来版本中移除。<br>多详细信息，请参阅官方发布公告。</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/kubernetes/" class="category-chain-item">kubernetes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="print-no-link">#知识梳理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>KubernetesChangelogs</div>
+      <div>http://example.com/2025/02/05/2025-02-05-KubernetesChangeLog汇总/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 5, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/10/2025-02-10-%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E5%8A%9F%E8%83%BD%E6%A2%B3%E7%90%86/" title="运维平台功能梳理">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">运维平台功能梳理</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/05/2025-02-05-KubernetesChangelog-1.32/" title="KubernetesChangelog-1.32">
+                        <span class="hidden-mobile">KubernetesChangelog-1.32</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

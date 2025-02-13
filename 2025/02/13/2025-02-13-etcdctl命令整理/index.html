@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="etcdctl 是 etcd 的命令行客户端工具，用于与 etcd 集群进行交互。下面是 etcdctl 的一些常用选项和命令，帮助你进行数据存取和集群管理等操作。 常用选项在执行任何 etcdctl 命令时，你通常需要指定以下选项来配置连接参数：  --endpoints&#x3D;[]：指定 etcd 集群的一个或多个端点地址，通常是 http:&#x2F;&#x2F;ip:port 格式。 --cacert&#x3D;&quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="etcdctl命令整理">
+<meta property="og:url" content="http://example.com/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="etcdctl 是 etcd 的命令行客户端工具，用于与 etcd 集群进行交互。下面是 etcdctl 的一些常用选项和命令，帮助你进行数据存取和集群管理等操作。 常用选项在执行任何 etcdctl 命令时，你通常需要指定以下选项来配置连接参数：  --endpoints&#x3D;[]：指定 etcd 集群的一个或多个端点地址，通常是 http:&#x2F;&#x2F;ip:port 格式。 --cacert&#x3D;&quot;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-02-13T02:09:00.000Z">
+<meta property="article:modified_time" content="2025-02-13T05:52:32.451Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="知识梳理">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>etcdctl命令整理 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="etcdctl命令整理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-13 10:09" pubdate>
+          February 13, 2025 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">etcdctl命令整理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><code>etcdctl</code> 是 <code>etcd</code> 的命令行客户端工具，用于与 <code>etcd</code> 集群进行交互。下面是 <code>etcdctl</code> 的一些常用选项和命令，帮助你进行数据存取和集群管理等操作。</p>
+<h1 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a>常用选项</h1><p>在执行任何 <code>etcdctl</code> 命令时，你通常需要指定以下选项来配置连接参数：</p>
+<ul>
+<li><code>--endpoints=[]</code>：指定 <code>etcd</code> 集群的一个或多个端点地址，通常是 <code>http://ip:port</code> 格式。</li>
+<li><code>--cacert=&quot;&quot;</code>：指定根证书文件路径，用于 TLS 连接。</li>
+<li><code>--cert=&quot;&quot;</code>：指定客户端证书文件路径，用于 TLS 连接。</li>
+<li><code>--key=&quot;&quot;</code>：指定客户端私钥文件路径，用于 TLS 连接。</li>
+<li><code>--user=&quot;&quot;</code>：指定用户名和密码，格式为 <code>username:password</code>，用于身份验证。</li>
+<li><code>--dial-timeout=&quot;&quot;</code>：指定建立连接的超时时长。</li>
+<li><code>--command-timeout=&quot;&quot;</code>：指定命令执行的超时时长。</li>
+</ul>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="数据操作命令"><a href="#数据操作命令" class="headerlink" title="数据操作命令"></a>数据操作命令</h2><ul>
+<li><p><code>put &lt;key&gt; &lt;value&gt;</code>：设置指定键的值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl put mykey myvalue</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>get &lt;key&gt;</code>：获取指定键的值，可以使用 <code>--prefix</code> 来获取具有相同前缀的键。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">etcdctl get mykey</span><br><span class="line">etcdctl get my --prefix</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>del &lt;key&gt;</code>：删除指定键。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl del mykey</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="集群操作命令"><a href="#集群操作命令" class="headerlink" title="集群操作命令"></a>集群操作命令</h2><ul>
+<li><p><code>member list</code>：列出集群中所有成员。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl member list</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>endpoint status</code>：获取指定端点的状态信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl endpoint status</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>endpoint health</code>：检查集群中一个或多个端点的健康状态。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl endpoint health</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="维护相关命令"><a href="#维护相关命令" class="headerlink" title="维护相关命令"></a>维护相关命令</h2><ul>
+<li><p><code>snapshot save &lt;filename&gt;</code>：创建集群的快照备份。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl snapshot save backup.db</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>snapshot status &lt;filename&gt;</code>：查看快照状态。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl snapshot status backup.db</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>defrag</code>：整理 <code>etcd</code> 数据库以释放空间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl defrag</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><ul>
+<li><code>version</code>：显示 <code>etcdctl</code> 工具和 <code>etcd</code> 服务器版本。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl version</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这些命令和选项覆盖了 <code>etcdctl</code> 的大部分基本功能，但 <code>etcdctl</code> 是一个非常强大和灵活的工具，拥有更多的高级选项和命令。要获取更多详细信息，您可以使用该工具的帮助命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="扩展命令"><a href="#扩展命令" class="headerlink" title="扩展命令"></a>扩展命令</h1><h2 id="事务机制"><a href="#事务机制" class="headerlink" title="事务机制"></a>事务机制</h2><p><code>etcdctl txn</code> 是用于执行事务操作的一种功能，允许你在一个原子操作中执行多个条件（条件、操作）。这在需要多个操作保证一致性时非常有用。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>事务操作通过一个三元组的形式指定：<strong>比较 → 如果成立 → 如果不成立</strong>。可以串联多个条件，每个条件包含对应的操作分支。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这里是一个简单的示例，展示如何使用 <code>etcdctl txn</code> 命令进行事务操作：</p>
+<h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>假设有一个键 <code>foo</code>，我们希望：</p>
+<ul>
+<li>如果 <code>foo</code> 的值是 <code>bar</code>，则更新 <code>foo</code> 的值为 <code>baz</code>。</li>
+<li>否则，设置一个键 <code>newkey</code>，其值为 <code>newvalue</code>。</li>
+</ul>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">etcdctl txn &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">compares:</span></span><br><span class="line"><span class="string">  value(&quot;foo&quot;) = &quot;bar&quot;</span></span><br><span class="line"><span class="string">success:</span></span><br><span class="line"><span class="string">  put &quot;foo&quot; &quot;baz&quot;</span></span><br><span class="line"><span class="string">failure:</span></span><br><span class="line"><span class="string">  put &quot;newkey&quot; &quot;newvalue&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="操作解析"><a href="#操作解析" class="headerlink" title="操作解析"></a>操作解析</h3><ol>
+<li><p><strong>比较条件</strong>：</p>
+<ul>
+<li><code>value(&quot;foo&quot;) = &quot;bar&quot;</code>：检查键 <code>foo</code> 当前的值是否为 <code>bar</code>。</li>
+</ul>
+</li>
+<li><p><strong>成功操作</strong>：</p>
+<ul>
+<li>如果上述条件成立，则执行 <code>put &quot;foo&quot; &quot;baz&quot;</code>：将键 <code>foo</code> 的值设置为 <code>baz</code>。</li>
+</ul>
+</li>
+<li><p><strong>失败操作</strong>：</p>
+<ul>
+<li>如果条件不成立，则执行 <code>put &quot;newkey&quot; &quot;newvalue&quot;</code>：将键 <code>newkey</code> 的值设置为 <code>newvalue</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="更多比较类型"><a href="#更多比较类型" class="headerlink" title="更多比较类型"></a>更多比较类型</h3><p><code>etcdctl txn</code> 支持多种比较类型：</p>
+<ul>
+<li><code>value(&quot;key&quot;) &lt;op&gt; &quot;value&quot;</code>：比较给定键的值。</li>
+<li><code>version(&quot;key&quot;) &lt;op&gt; &quot;version&quot;</code>：比较键的版本号。</li>
+<li><code>createRevision(&quot;key&quot;) &lt;op&gt; &quot;revision&quot;</code>：比较键的创建修订。</li>
+<li><code>modRevision(&quot;key&quot;) &lt;op&gt; &quot;revision&quot;</code>：比较键的修改修订。</li>
+</ul>
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><p>运算符 <code>&lt;op&gt;</code> 可以为以下之一：</p>
+<ul>
+<li><code>=</code>：等于</li>
+<li><code>!=</code>：不等于</li>
+<li><code>&lt;</code>：小于</li>
+<li><code>&lt;=</code>：小于等于</li>
+<li><code>&gt;</code>：大于</li>
+<li><code>&gt;=</code>：大于等于</li>
+</ul>
+<h3 id="结果判断"><a href="#结果判断" class="headerlink" title="结果判断"></a>结果判断</h3><p>事务执行后，<code>etcd</code> 将返回一个事务结果，其中包含哪些操作被成功执行的信息。使用返回的信息可以进一步决定应用程序逻辑。</p>
+<p>通过事务操作，你可以确保在复杂条件下的多步骤状态变更的一致性，这在分布式系统中至关重要。使用 <code>etcdctl txn</code> 和其他 API 选项可以来实现更复杂的操作和控制流程。</p>
+<p><code>etcdctl watch</code> 命令用于监视 <code>etcd</code> 中的键值变化。它可以实时监控键值的变化，并提供回调机制来处理变化事件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINTS</span> watch stock1</span><br></pre></td></tr></table></figure>
+
+<p><code>etcdctl watch</code> 命令的常用选项：</p>
+<ul>
+<li><code>--endpoints</code>：指定 <code>etcd</code> 集群的端点地址。</li>
+<li><code>--prefix</code>：监视具有相同前缀的键。</li>
+<li><code>--recursive</code>：递归监视键值变化。</li>
+</ul>
+<h2 id="租约机制"><a href="#租约机制" class="headerlink" title="租约机制"></a>租约机制</h2><p>在 <code>etcd</code> 中，租约（Lease）是一种机制，用于管理键值的生存时间。通过使用租约，你可以为键值对设置一个TTL（生存时间），当租约到期时，绑定到该租约的键值对将自动删除。这在需要临时数据或心跳保持时非常有用。</p>
+<h3 id="创建租约"><a href="#创建租约" class="headerlink" title="创建租约"></a>创建租约</h3><p>可以通过 <code>etcdctl lease grant</code> 命令来创建一个租约。以下是创建租约的步骤：</p>
+<h4 id="步骤-1-创建租约"><a href="#步骤-1-创建租约" class="headerlink" title="步骤 1: 创建租约"></a>步骤 1: 创建租约</h4><p>使用 <code>lease grant</code> 命令创建一个租约，并指定其 TTL（以秒为单位）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lease grant &lt;ttl&gt;</span><br></pre></td></tr></table></figure>
+
+<p>例如，要创建一个 10 秒的租约：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lease grant 10</span><br></pre></td></tr></table></figure>
+
+<p>成功创建后，命令将返回租约 ID 和 TTL：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lease 1234567890 granted with TTL(10s)</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤-2-使用租约"><a href="#步骤-2-使用租约" class="headerlink" title="步骤 2: 使用租约"></a>步骤 2: 使用租约</h4><p>使用获得的租约 ID，你可以将其与一个或多个键值对绑定。这样做的操作是使用 <code>--lease</code> 选项来设置键：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl put mykey myvalue --lease=1234567890</span><br></pre></td></tr></table></figure>
+
+<p>这意味着 <code>mykey</code> 的生存期受租约 <code>1234567890</code> 的控制。当租约到期时，<code>mykey</code> 将自动过期并被删除。</p>
+<h3 id="查看租约"><a href="#查看租约" class="headerlink" title="查看租约"></a>查看租约</h3><p>可以使用 <code>etcdctl lease timetolive</code> 命令查看租约的剩余 TTL：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lease timetolive 1234567890</span><br></pre></td></tr></table></figure>
+
+<p>这将返回租约的剩余时间以及是否具有保持活性选项。</p>
+<h3 id="刷新租约"><a href="#刷新租约" class="headerlink" title="刷新租约"></a>刷新租约</h3><p>如果想延长租约的生存时间，可以使用 <code>etcdctl lease keep-alive</code> 命令来刷新租约：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lease keep-alive 1234567890</span><br></pre></td></tr></table></figure>
+
+<p>此命令将租约的 TTL 重新设置为其初始值。</p>
+<h3 id="释放租约"><a href="#释放租约" class="headerlink" title="释放租约"></a>释放租约</h3><p>如果不再需要租约，可以使用 <code>etcdctl lease revoke</code> 命令来显式释放租约：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lease revoke 1234567890</span><br></pre></td></tr></table></figure>
+
+<p>释放后，所有绑定到此租约的键将被立即删除。</p>
+<p>利用租约机制，能够有效管理临时数据的生命期，并在分布式系统中实现心跳和故障检测等高级功能。请确保在生产环境中合理配置租约的 TTL 和续约策略，以确保数据和系统的稳定性。</p>
+<h2 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h2><p><code>etcdctl lock</code> 命令用于在 <code>etcd</code> 中实现分布式锁。它允许你在多个节点之间协调对共享资源的访问，确保在分布式环境中只有一个节点能够访问和修改资源。</p>
+<h3 id="基本用法-1"><a href="#基本用法-1" class="headerlink" title="基本用法"></a>基本用法</h3><p>以下是 <code>etcdctl lock</code> 命令的基本用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl lock &lt;key&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="选举机制"><a href="#选举机制" class="headerlink" title="选举机制"></a>选举机制</h2><p><code>etcdctl elect</code> 命令用于在 <code>etcd</code> 中实现分布式选举。它允许你在多个节点之间协调选举过程，确保在分布式环境中只有一个节点能够成为领导者。</p>
+<h3 id="基本用法-2"><a href="#基本用法-2" class="headerlink" title="基本用法"></a>基本用法</h3><p>以下是 <code>etcdctl elect</code> 命令的基本用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINTS</span> elect &lt;election-name&gt; &lt;leader-name&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="健康检测"><a href="#健康检测" class="headerlink" title="健康检测"></a>健康检测</h1><h2 id="检查整体状态"><a href="#检查整体状态" class="headerlink" title="检查整体状态"></a>检查整体状态</h2><p>endpoint status 检查 –endpoints 标志中指定的每个端点的整体状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl endpoint status (--endpoints=<span class="variable">$ENDPOINTS</span>|--cluster)</span><br></pre></td></tr></table></figure>
+<h3 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--cluster[=<span class="literal">false</span>]: use all endpoints from the cluster member list</span><br></pre></td></tr></table></figure>
+<h2 id="检查健康"><a href="#检查健康" class="headerlink" title="检查健康"></a>检查健康</h2><p>endpoint health 检查 –endpoints 标记中指定的每个端点的健康状况：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">etcdctl endpoint health (--endpoints=<span class="variable">$ENDPOINTS</span>|--cluster)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="选项-1"><a href="#选项-1" class="headerlink" title="选项"></a>选项</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--cluster[=<span class="literal">false</span>]: use all endpoints from the cluster member list</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="检查KV-hash"><a href="#检查KV-hash" class="headerlink" title="检查KV hash"></a>检查KV hash</h2><p>endpoint hashkv 检查 –endpoints 标记中指定的每个端点的 KV 历史哈希值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl endpoint hashkv (--endpoints=<span class="variable">$ENDPOINTS</span>|--cluster) [rev=<span class="variable">$REV</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="选项-2"><a href="#选项-2" class="headerlink" title="选项"></a>选项</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--cluster[=<span class="literal">false</span>]: use all endpoints from the cluster member list</span><br><span class="line">--rev=0: maximum revision to <span class="built_in">hash</span> (default: latest revision)</span><br></pre></td></tr></table></figure>
+
+<h2 id="继承选项"><a href="#继承选项" class="headerlink" title="继承选项"></a>继承选项</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--endpoints=<span class="string">&quot;127.0.0.1:2379&quot;</span>: gRPC endpoints</span><br><span class="line">-w, --write-out=<span class="string">&quot;simple&quot;</span>: <span class="built_in">set</span> the output format (fields, json, protobuf, simple, table)</span><br></pre></td></tr></table></figure>
+
+<h2 id="快照机制"><a href="#快照机制" class="headerlink" title="快照机制"></a>快照机制</h2><p>snapshot save 创建集群的快照备份：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINT</span> snapshot save DB_NAME</span><br></pre></td></tr></table></figure>
+<h3 id="选项-3"><a href="#选项-3" class="headerlink" title="选项"></a>选项</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--endpoints=[127.0.0.1:2379], gRPC endpoints</span><br></pre></td></tr></table></figure>
+<p>只能从一个 etcd 节点请求快照，因此 –endpoints 标志应只包含一个端点。</p>
+<h2 id="API版本从v2切换到v3"><a href="#API版本从v2切换到v3" class="headerlink" title="API版本从v2切换到v3"></a>API版本从v2切换到v3</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># write key in etcd version 2 store</span></span><br><span class="line"><span class="built_in">export</span> ETCDCTL_API=2</span><br><span class="line">etcdctl --endpoints=http://<span class="variable">$ENDPOINT</span> <span class="built_in">set</span> foo bar</span><br><span class="line"></span><br><span class="line"><span class="comment"># read key in etcd v2</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINTS</span> --output=<span class="string">&quot;json&quot;</span> get foo</span><br><span class="line"></span><br><span class="line"><span class="comment"># stop etcd node to migrate, one by one</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># migrate v2 data</span></span><br><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINT</span> migrate --data-dir=<span class="string">&quot;default.etcd&quot;</span> --wal-dir=<span class="string">&quot;default.etcd/member/wal&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># restart etcd node after migrate, one by one</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># confirm that the key got migrated</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$ENDPOINTS</span> get /foo</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加-删除etcd节点"><a href="#添加-删除etcd节点" class="headerlink" title="添加&#x2F;删除etcd节点"></a>添加&#x2F;删除etcd节点</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># For each machine</span></span><br><span class="line">TOKEN=my-etcd-token-1</span><br><span class="line">CLUSTER_STATE=new</span><br><span class="line">NAME_1=etcd-node-1</span><br><span class="line">NAME_2=etcd-node-2</span><br><span class="line">NAME_3=etcd-node-3</span><br><span class="line">HOST_1=10.240.0.13</span><br><span class="line">HOST_2=10.240.0.14</span><br><span class="line">HOST_3=10.240.0.15</span><br><span class="line">CLUSTER=<span class="variable">$&#123;NAME_1&#125;</span>=http://<span class="variable">$&#123;HOST_1&#125;</span>:2380,<span class="variable">$&#123;NAME_2&#125;</span>=http://<span class="variable">$&#123;HOST_2&#125;</span>:2380,<span class="variable">$&#123;NAME_3&#125;</span>=http://<span class="variable">$&#123;HOST_3&#125;</span>:2380</span><br><span class="line"></span><br><span class="line"><span class="comment"># For node 1</span></span><br><span class="line">THIS_NAME=<span class="variable">$&#123;NAME_1&#125;</span></span><br><span class="line">THIS_IP=<span class="variable">$&#123;HOST_1&#125;</span></span><br><span class="line">etcd --data-dir=data.etcd --name <span class="variable">$&#123;THIS_NAME&#125;</span> \</span><br><span class="line">	--initial-advertise-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--listen-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--advertise-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--listen-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--initial-cluster <span class="variable">$&#123;CLUSTER&#125;</span> \</span><br><span class="line">	--initial-cluster-state <span class="variable">$&#123;CLUSTER_STATE&#125;</span> \</span><br><span class="line">	--initial-cluster-token <span class="variable">$&#123;TOKEN&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># For node 2</span></span><br><span class="line">THIS_NAME=<span class="variable">$&#123;NAME_2&#125;</span></span><br><span class="line">THIS_IP=<span class="variable">$&#123;HOST_2&#125;</span></span><br><span class="line">etcd --data-dir=data.etcd --name <span class="variable">$&#123;THIS_NAME&#125;</span> \</span><br><span class="line">	--initial-advertise-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--listen-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--advertise-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--listen-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--initial-cluster <span class="variable">$&#123;CLUSTER&#125;</span> \</span><br><span class="line">	--initial-cluster-state <span class="variable">$&#123;CLUSTER_STATE&#125;</span> \</span><br><span class="line">	--initial-cluster-token <span class="variable">$&#123;TOKEN&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># For node 3</span></span><br><span class="line">THIS_NAME=<span class="variable">$&#123;NAME_3&#125;</span></span><br><span class="line">THIS_IP=<span class="variable">$&#123;HOST_3&#125;</span></span><br><span class="line">etcd --data-dir=data.etcd --name <span class="variable">$&#123;THIS_NAME&#125;</span> \</span><br><span class="line">	--initial-advertise-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--listen-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--advertise-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--listen-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--initial-cluster <span class="variable">$&#123;CLUSTER&#125;</span> \</span><br><span class="line">	--initial-cluster-state <span class="variable">$&#123;CLUSTER_STATE&#125;</span> \</span><br><span class="line">	--initial-cluster-token <span class="variable">$&#123;TOKEN&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后用 member remove 和 member add 命令替换一个成员：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get member ID</span></span><br><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">HOST_1=10.240.0.13</span><br><span class="line">HOST_2=10.240.0.14</span><br><span class="line">HOST_3=10.240.0.15</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;HOST_1&#125;</span>:2379,<span class="variable">$&#123;HOST_2&#125;</span>:2379,<span class="variable">$&#123;HOST_3&#125;</span>:2379 member list</span><br><span class="line"></span><br><span class="line"><span class="comment"># remove the member</span></span><br><span class="line">MEMBER_ID=278c654c9a6dfd3b</span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;HOST_1&#125;</span>:2379,<span class="variable">$&#123;HOST_2&#125;</span>:2379,<span class="variable">$&#123;HOST_3&#125;</span>:2379 \</span><br><span class="line">	member remove <span class="variable">$&#123;MEMBER_ID&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># add a new member (node 4)</span></span><br><span class="line"><span class="built_in">export</span> ETCDCTL_API=3</span><br><span class="line">NAME_1=etcd-node-1</span><br><span class="line">NAME_2=etcd-node-2</span><br><span class="line">NAME_4=etcd-node-4</span><br><span class="line">HOST_1=10.240.0.13</span><br><span class="line">HOST_2=10.240.0.14</span><br><span class="line">HOST_4=10.240.0.16 <span class="comment"># new member</span></span><br><span class="line">etcdctl --endpoints=<span class="variable">$&#123;HOST_1&#125;</span>:2379,<span class="variable">$&#123;HOST_2&#125;</span>:2379 \</span><br><span class="line">	member add <span class="variable">$&#123;NAME_4&#125;</span> \</span><br><span class="line">	--peer-urls=http://<span class="variable">$&#123;HOST_4&#125;</span>:2380</span><br></pre></td></tr></table></figure>
+<p>接下来，使用 –initial-cluster-state existing 标志启动新成员：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># [WARNING] If the new member starts from the same disk space,</span></span><br><span class="line"><span class="comment"># make sure to remove the data directory of the old member</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># restart with &#x27;existing&#x27; flag</span></span><br><span class="line">TOKEN=my-etcd-token-1</span><br><span class="line">CLUSTER_STATE=existing</span><br><span class="line">NAME_1=etcd-node-1</span><br><span class="line">NAME_2=etcd-node-2</span><br><span class="line">NAME_4=etcd-node-4</span><br><span class="line">HOST_1=10.240.0.13</span><br><span class="line">HOST_2=10.240.0.14</span><br><span class="line">HOST_4=10.240.0.16 <span class="comment"># new member</span></span><br><span class="line">CLUSTER=<span class="variable">$&#123;NAME_1&#125;</span>=http://<span class="variable">$&#123;HOST_1&#125;</span>:2380,<span class="variable">$&#123;NAME_2&#125;</span>=http://<span class="variable">$&#123;HOST_2&#125;</span>:2380,<span class="variable">$&#123;NAME_4&#125;</span>=http://<span class="variable">$&#123;HOST_4&#125;</span>:2380</span><br><span class="line"></span><br><span class="line">THIS_NAME=<span class="variable">$&#123;NAME_4&#125;</span></span><br><span class="line">THIS_IP=<span class="variable">$&#123;HOST_4&#125;</span></span><br><span class="line">etcd --data-dir=data.etcd --name <span class="variable">$&#123;THIS_NAME&#125;</span> \</span><br><span class="line">	--initial-advertise-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--listen-peer-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2380 \</span><br><span class="line">	--advertise-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--listen-client-urls http://<span class="variable">$&#123;THIS_IP&#125;</span>:2379 \</span><br><span class="line">	--initial-cluster <span class="variable">$&#123;CLUSTER&#125;</span> \</span><br><span class="line">	--initial-cluster-state <span class="variable">$&#123;CLUSTER_STATE&#125;</span> \</span><br><span class="line">	--initial-cluster-token <span class="variable">$&#123;TOKEN&#125;</span></span><br></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/kubernetes/" class="category-chain-item">kubernetes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="print-no-link">#知识梳理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>etcdctl命令整理</div>
+      <div>http://example.com/2025/02/13/2025-02-13-etcdctl命令整理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 13, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/13/hello-world/" title="Hello World">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/13/2025-02-13-golanghttp%E5%BA%93%E8%A7%A3%E6%9E%90/" title="Golang整体复习Day04">
+                        <span class="hidden-mobile">Golang整体复习Day04</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Nginx 的返回码（HTTP 状态码）是服务器对客户端请求的响应结果。理解这些状态码的含义对于排查问题、优化性能和提升用户体验非常重要。以下是常见的 Nginx 返回码及其解析：  1xx：信息性状态码表示请求已被接收，继续处理。  100 Continue： 客户端应继续发送请求的剩余部分。 通常用于 POST 或 PUT 请求中，客户端先发送请求头，服务器确认后再发送请求体。   101 S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx常见返回码整理">
+<meta property="og:url" content="http://example.com/2025/02/05/2025-02-05-Nginx%E5%B8%B8%E8%A7%81%E8%BF%94%E5%9B%9E%E7%A0%81%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Nginx 的返回码（HTTP 状态码）是服务器对客户端请求的响应结果。理解这些状态码的含义对于排查问题、优化性能和提升用户体验非常重要。以下是常见的 Nginx 返回码及其解析：  1xx：信息性状态码表示请求已被接收，继续处理。  100 Continue： 客户端应继续发送请求的剩余部分。 通常用于 POST 或 PUT 请求中，客户端先发送请求头，服务器确认后再发送请求体。   101 S">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-02-05T03:45:00.000Z">
+<meta property="article:modified_time" content="2025-02-05T03:47:32.313Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="知识梳理">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>nginx常见返回码整理 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="nginx常见返回码整理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-05 11:45" pubdate>
+          February 5, 2025 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">nginx常见返回码整理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Nginx 的返回码（HTTP 状态码）是服务器对客户端请求的响应结果。理解这些状态码的含义对于排查问题、优化性能和提升用户体验非常重要。以下是常见的 Nginx 返回码及其解析：</p>
+<hr>
+<h3 id="1xx：信息性状态码"><a href="#1xx：信息性状态码" class="headerlink" title="1xx：信息性状态码"></a><strong>1xx：信息性状态码</strong></h3><p>表示请求已被接收，继续处理。</p>
+<ul>
+<li><strong>100 Continue</strong>：<ul>
+<li>客户端应继续发送请求的剩余部分。</li>
+<li>通常用于 POST 或 PUT 请求中，客户端先发送请求头，服务器确认后再发送请求体。</li>
+</ul>
+</li>
+<li><strong>101 Switching Protocols</strong>：<ul>
+<li>服务器同意客户端请求，切换协议（如从 HTTP 切换到 WebSocket）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2xx：成功状态码"><a href="#2xx：成功状态码" class="headerlink" title="2xx：成功状态码"></a><strong>2xx：成功状态码</strong></h3><p>表示请求已成功被服务器接收、理解并处理。</p>
+<ul>
+<li><strong>200 OK</strong>：<ul>
+<li>请求成功，服务器返回了请求的资源。</li>
+<li>最常见的成功状态码。</li>
+</ul>
+</li>
+<li><strong>201 Created</strong>：<ul>
+<li>请求成功，并且服务器创建了新的资源（如 POST 请求创建了新资源）。</li>
+</ul>
+</li>
+<li><strong>204 No Content</strong>：<ul>
+<li>请求成功，但响应中没有内容（如 DELETE 请求成功）。</li>
+</ul>
+</li>
+<li><strong>206 Partial Content</strong>：<ul>
+<li>服务器成功处理了部分 GET 请求（如大文件的分段下载）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3xx：重定向状态码"><a href="#3xx：重定向状态码" class="headerlink" title="3xx：重定向状态码"></a><strong>3xx：重定向状态码</strong></h3><p>表示需要客户端进一步操作以完成请求。</p>
+<ul>
+<li><strong>301 Moved Permanently</strong>：<ul>
+<li>请求的资源已永久移动到新位置，客户端应使用新的 URL。</li>
+</ul>
+</li>
+<li><strong>302 Found</strong>：<ul>
+<li>请求的资源临时移动到新位置，客户端应使用新的 URL。</li>
+</ul>
+</li>
+<li><strong>304 Not Modified</strong>：<ul>
+<li>资源未修改，客户端可以使用缓存的版本。</li>
+<li>通常用于条件请求（如 <code>If-Modified-Since</code>）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="4xx：客户端错误状态码"><a href="#4xx：客户端错误状态码" class="headerlink" title="4xx：客户端错误状态码"></a><strong>4xx：客户端错误状态码</strong></h3><p>表示客户端发送的请求有错误，服务器无法处理。</p>
+<ul>
+<li><strong>400 Bad Request</strong>：<ul>
+<li>请求无效，服务器无法理解（如参数错误、格式错误）。</li>
+</ul>
+</li>
+<li><strong>401 Unauthorized</strong>：<ul>
+<li>请求需要身份验证，客户端未提供有效的凭据。</li>
+</ul>
+</li>
+<li><strong>403 Forbidden</strong>：<ul>
+<li>服务器拒绝请求，客户端没有访问权限。</li>
+</ul>
+</li>
+<li><strong>404 Not Found</strong>：<ul>
+<li>请求的资源不存在。</li>
+</ul>
+</li>
+<li><strong>405 Method Not Allowed</strong>：<ul>
+<li>请求方法不被允许（如使用 POST 访问只支持 GET 的接口）。</li>
+</ul>
+</li>
+<li><strong>408 Request Timeout</strong>：<ul>
+<li>请求超时，服务器未在指定时间内收到完整的请求。</li>
+</ul>
+</li>
+<li><strong>413 Payload Too Large</strong>：<ul>
+<li>请求体过大，服务器拒绝处理。</li>
+</ul>
+</li>
+<li><strong>414 URI Too Long</strong>：<ul>
+<li>请求的 URL 过长，服务器拒绝处理。</li>
+</ul>
+</li>
+<li><strong>429 Too Many Requests</strong>：<ul>
+<li>客户端发送的请求过多，触发限流。</li>
+</ul>
+</li>
+<li><strong>499 Client Closed Request：</strong><ul>
+<li>客户端在服务器处理请求的过程中断开了连接</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="5xx：服务器错误状态码"><a href="#5xx：服务器错误状态码" class="headerlink" title="5xx：服务器错误状态码"></a><strong>5xx：服务器错误状态码</strong></h3><p>表示服务器处理请求时发生错误。</p>
+<ul>
+<li><strong>500 Internal Server Error</strong>：<ul>
+<li>服务器内部错误，无法完成请求。</li>
+</ul>
+</li>
+<li><strong>502 Bad Gateway</strong>：<ul>
+<li>服务器作为网关或代理时，从上游服务器收到无效响应。</li>
+</ul>
+</li>
+<li><strong>503 Service Unavailable</strong>：<ul>
+<li>服务器暂时不可用（如过载或维护）。</li>
+</ul>
+</li>
+<li><strong>504 Gateway Timeout</strong>：<ul>
+<li>服务器作为网关或代理时，未及时从上游服务器收到响应。</li>
+</ul>
+</li>
+<li><strong>505 HTTP Version Not Supported</strong>：<ul>
+<li>服务器不支持请求中使用的 HTTP 协议版本。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="常见-Nginx-返回码场景分析"><a href="#常见-Nginx-返回码场景分析" class="headerlink" title="常见 Nginx 返回码场景分析"></a><strong>常见 Nginx 返回码场景分析</strong></h3><h3 id="1-502-Bad-Gateway"><a href="#1-502-Bad-Gateway" class="headerlink" title="1. 502 Bad Gateway"></a>1. <strong>502 Bad Gateway</strong></h3><ul>
+<li><strong>原因</strong>：<ul>
+<li>后端服务（如 Tomcat、Node.js）崩溃或无响应。</li>
+<li>Nginx 与后端服务的连接超时。</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>：<ul>
+<li><p>检查后端服务是否正常运行。</p>
+</li>
+<li><p>调整 Nginx 的超时配置：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proxy_connect_timeout 60s;</span><br><span class="line">proxy_read_timeout 60s;</span><br><span class="line">proxy_send_timeout 60s;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-504-Gateway-Timeout"><a href="#2-504-Gateway-Timeout" class="headerlink" title="2. 504 Gateway Timeout"></a>2. <strong>504 Gateway Timeout</strong></h3><ul>
+<li><strong>原因</strong>：<ul>
+<li>后端服务处理请求时间过长，Nginx 等待超时。</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>：<ul>
+<li><p>优化后端服务的性能。</p>
+</li>
+<li><p>调整 Nginx 的超时配置：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">proxy_read_timeout 300s;</span><br><span class="line">proxy_send_timeout 300s;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="3-404-Not-Found"><a href="#3-404-Not-Found" class="headerlink" title="3. 404 Not Found"></a>3. <strong>404 Not Found</strong></h3><ul>
+<li><strong>原因</strong>：<ul>
+<li>请求的资源不存在。</li>
+<li>Nginx 配置错误，未正确映射请求路径。</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>：<ul>
+<li><p>检查请求的 URL 是否正确。</p>
+</li>
+<li><p>检查 Nginx 的 <code>location</code> 配置：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /path &#123;</span><br><span class="line">    proxy_pass &lt;http://backend&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-403-Forbidden"><a href="#4-403-Forbidden" class="headerlink" title="4. 403 Forbidden"></a>4. <strong>403 Forbidden</strong></h3><ul>
+<li><strong>原因</strong>：<ul>
+<li>客户端没有访问权限。</li>
+<li>Nginx 配置了访问控制（如 <code>allow</code> 和 <code>deny</code>）。</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>：<ul>
+<li><p>检查 Nginx 的访问控制配置：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location /path &#123;</span><br><span class="line">    allow 192.168.1.0/24;</span><br><span class="line">    deny all;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="5-500-Internal-Server-Error"><a href="#5-500-Internal-Server-Error" class="headerlink" title="5. 500 Internal Server Error"></a>5. <strong>500 Internal Server Error</strong></h3><ul>
+<li><strong>原因</strong>：<ul>
+<li>后端服务抛出未捕获的异常。</li>
+<li>Nginx 配置错误（如错误的 <code>proxy_pass</code>）。</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>：<ul>
+<li><p>检查后端服务的日志，修复代码问题。</p>
+</li>
+<li><p>检查 Nginx 的 <code>proxy_pass</code> 配置：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /path &#123;</span><br><span class="line">    proxy_pass &lt;http://backend&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Nginx-日志中的返回码"><a href="#Nginx-日志中的返回码" class="headerlink" title="Nginx 日志中的返回码"></a><strong>Nginx 日志中的返回码</strong></h3><p>Nginx 的访问日志（<code>access.log</code>）会记录每个请求的返回码。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 - - [23/Oct/2023:12:34:56 +0800] &quot;GET /path HTTP/1.1&quot; 200 612 &quot;-&quot; &quot;Mozilla/5.0&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>200</code>：返回码。</li>
+<li><code>612</code>：响应体的大小（字节）。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>Nginx 的返回码是排查问题和优化性能的重要依据。通过理解常见的状态码及其含义，可以快速定位问题并采取相应的解决方案。如果需要进一步分析，可以结合 Nginx 的日志和配置进行深入排查。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/default/" class="category-chain-item">default</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="print-no-link">#知识梳理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>nginx常见返回码整理</div>
+      <div>http://example.com/2025/02/05/2025-02-05-Nginx常见返回码整理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 5, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/05/2025-02-05-KubernetesChangelog-1.32/" title="KubernetesChangelog-1.32">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">KubernetesChangelog-1.32</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/30/2025-01-30-%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%8D%83%E8%BE%9B%E4%B8%87%E8%8B%A6%E7%9A%84%E9%83%A8%E7%BD%B2/" title="记一次千辛万苦的部署">
+                        <span class="hidden-mobile">记一次千辛万苦的部署</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
