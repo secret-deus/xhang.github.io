@@ -1,0 +1,1061 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>nacos系统参数介绍 | xhang's blog</title><meta name="author" content="xhang"><meta name="copyright" content="xhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Nacos 系统参数介绍1. Nacos Server对于Server端来说，一般是设置在&#123;nacos.home&#125;&#x2F;conf&#x2F;application.properties里，如果参数名后标注了(-D)的，则表示是 JVM 的参数，需要在&#123;nacos.home&#125;&#x2F;bin&#x2F;startup.sh里进行相应的设置。例如像设置 nacos.home 的值，可以在&amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nacos系统参数介绍">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/13/nacos/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="Nacos 系统参数介绍1. Nacos Server对于Server端来说，一般是设置在&#123;nacos.home&#125;&#x2F;conf&#x2F;application.properties里，如果参数名后标注了(-D)的，则表示是 JVM 的参数，需要在&#123;nacos.home&#125;&#x2F;bin&#x2F;startup.sh里进行相应的设置。例如像设置 nacos.home 的值，可以在&amp;#1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.740777352.xyz/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-02-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-14T02:45:33.502Z">
+<meta property="article:author" content="xhang">
+<meta property="article:tag" content="nacos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.740777352.xyz/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "nacos系统参数介绍",
+  "url": "https://blog.740777352.xyz/2025/02/13/nacos/",
+  "image": "https://blog.740777352.xyz/img/butterfly-icon.png",
+  "datePublished": "2025-02-12T16:00:00.000Z",
+  "dateModified": "2025-02-14T02:45:33.502Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "xhang",
+      "url": "https://blog.740777352.xyz/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.740777352.xyz/2025/02/13/nacos/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'nacos系统参数介绍',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">xhang's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">nacos系统参数介绍</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">nacos系统参数介绍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-12T16:00:00.000Z" title="发表于 2025-02-13 00:00:00">2025-02-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-14T02:45:33.502Z" title="更新于 2025-02-14 10:45:33">2025-02-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Nacos-系统参数介绍"><a href="#Nacos-系统参数介绍" class="headerlink" title="Nacos 系统参数介绍"></a>Nacos 系统参数介绍</h2><h2 id="1-Nacos-Server"><a href="#1-Nacos-Server" class="headerlink" title="1. Nacos Server"></a>1. Nacos Server</h2><p>对于Server端来说，一般是设置在<code>&#123;nacos.home&#125;/conf/application.properties</code>里，如果参数名后标注了(-D)的，则表示是 JVM 的参数，需要在<code>&#123;nacos.home&#125;/bin/startup.sh</code>里进行相应的设置。例如像设置 nacos.home 的值，可以在<code>&#123;nacos.home&#125;/bin/startup.sh</code>进行如下设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -Dnacos.home=$&#123;BASE_DIR&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>若没有标注(-D)的参数，则同时可以在<code>&#123;nacos.home&#125;/conf/application.properties</code>里和JVM参数中配置，如果同时配置了JVM参数和<code>&#123;nacos.home&#125;/conf/application.properties</code>，那么JVM参数的优先级更高。</p>
+<h3 id="1-1-全局参数"><a href="#1-1-全局参数" class="headerlink" title="1.1. 全局参数"></a>1.1. 全局参数</h3><h4 id="1-1-1-基础参数"><a href="#1-1-1-基础参数" class="headerlink" title="1.1.1. 基础参数"></a>1.1.1. 基础参数</h4><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.home(-D)</td>
+<td>Nacos的根目录</td>
+<td>目录路径</td>
+<td>Nacos安装的目录</td>
+</tr>
+<tr>
+<td>nacos.standalone(-D)</td>
+<td>是否在单机模式</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.functionMode(-D)</td>
+<td>启动模式，支持只启动某一个模块，不设置时所有模块都会启动</td>
+<td>config&#x2F;naming&#x2F;空</td>
+<td>空</td>
+</tr>
+<tr>
+<td>nacos.server.ip(-D)</td>
+<td>Nacos服务端的IP，优先级比<code>nacos.inetutils.ip-address</code>更高，如果配置了该参数，则<code>nacos.inetutils.ip-address</code>不再生效</td>
+<td>本机IP</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.inetutils.prefer-hostname-over-ip</td>
+<td>节点优先使用hostname作为本机ip，若为<code>true</code>时，<code>cluster.conf</code>里是否应该填<code>hostname</code></td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.inetutils.ip-address</td>
+<td>本机IP，该参数设置后，将会使用这个IP去<code>cluster.conf</code>里进行匹配，请确保这个IP的值在<code>cluster.conf</code>里是存在的</td>
+<td>本机IP</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.core.sys.basic.processors</td>
+<td>指定服务端的处理器个数，用于部分虚拟化场景，防止读取CPU个数时读取到错误的值，导致线程数过多或过少</td>
+<td>正整数</td>
+<td>CPU个数</td>
+</tr>
+<tr>
+<td>nacos.core.monitor.topn.enabled</td>
+<td>Nacos Server topN 监控统计能力开关</td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>nacos.core.monitor.topn.count</td>
+<td>Nacos Server topN 监控统计 top的个数，如如配置为10，表示top10的配置和服务</td>
+<td>正整数</td>
+<td>10</td>
+</tr>
+<tr>
+<td>nacos.core.snowflake.worker-id</td>
+<td>Nacos Server 的snowflake workerId</td>
+<td>正整数</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>nacos.core.param.check.enabled</td>
+<td>Nacos Server 参数校验能力开关，开启后将会校验请求时的参数是否符合规范，不符合将被拦截，详情查看 <a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/manual/user/parameters-check/">参数校验</a></td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>server.port</td>
+<td>Nacos Server 的端口</td>
+<td>正整数</td>
+<td>8848</td>
+</tr>
+<tr>
+<td>server.servlet.context-path</td>
+<td>Nacos Server 的Servlet上下文路径</td>
+<td>正则表达式</td>
+<td>&#x2F;nacos</td>
+</tr>
+<tr>
+<td>spring.config.additional-location</td>
+<td>Nacos Server 的额外配置文件路径，除<code>&#123;nacos.home&#125;/conf/application.properties</code>外，用户可以添加额外的配置文件</td>
+<td>文件路径，多个文件路径用逗号分隔</td>
+<td>null</td>
+</tr>
+</tbody></table>
+<h4 id="1-1-2-数据库"><a href="#1-1-2-数据库" class="headerlink" title="1.1.2. 数据库"></a>1.1.2. 数据库</h4><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>spring.sql.init.platform</td>
+<td>Nacos Server 使用的数据库类型</td>
+<td>mysql&#x2F;空，指定为空时会根据<code>nacos.standalone</code>判断使用derby数据库还是mysql数据库；在使用<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/datasource-plugin/">数据源插件</a>时，可以指定为插件对应的数据库值，比如oracle或postgresql</td>
+<td>null</td>
+</tr>
+<tr>
+<td>spring.datasource.platform</td>
+<td>Nacos Server 使用的数据库类型，即将被废弃，请使用<code>spring.sql.init.platform</code>代替</td>
+<td>mysql&#x2F;空</td>
+<td>null</td>
+</tr>
+<tr>
+<td>db.num</td>
+<td>数据库数目</td>
+<td>正整数</td>
+<td>0</td>
+</tr>
+<tr>
+<td>db.url.0</td>
+<td>第一个数据库的URL</td>
+<td>字符串</td>
+<td>空</td>
+</tr>
+<tr>
+<td>db.url.1</td>
+<td>第二个数据库的URL，当db.num&#x3D;2时生效</td>
+<td>字符串</td>
+<td>空</td>
+</tr>
+<tr>
+<td>db.user</td>
+<td>数据库连接的用户名</td>
+<td>字符串</td>
+<td>空</td>
+</tr>
+<tr>
+<td>db.password</td>
+<td>数据库连接的密码</td>
+<td>字符串</td>
+<td>空</td>
+</tr>
+<tr>
+<td>db.pool.config.xxx</td>
+<td>数据库连接池参数，使用的是hikari连接池，参数与hikari连接池相同，如<code>db.pool.config.connectionTimeout</code>或<code>db.pool.config.maximumPoolSize</code></td>
+<td>字符串</td>
+<td>同hikariCp对应默认配置</td>
+</tr>
+</tbody></table>
+<p>当前数据库配置支持多数据源。通过<code>db.num</code>来指定数据源个数，<code>db.url.index</code>为对应的数据库的链接。<code>db.user</code>以及<code>db.password</code>没有设置<code>index</code>时,所有的链接都以<code>db.user</code>和<code>db.password</code>用作认证。如果不同数据源的用户名称或者用户密码不一样时，可以通过符号<code>,</code>来进行切割，或者指定<code>db.user.index</code>,<code>db.user.password</code>来设置对应数据库链接的用户或者密码。需要注意的是，当<code>db.user</code>和<code>db.password</code>没有指定下标时，因为当前机制会根据<code>,</code>进行切割。所以当用户名或者密码存在<code>,</code>时，会把<code>,</code>切割后前面的值当成最后的值进行认证，会导致认证失败。</p>
+<p>Nacos从1.3版本开始使用HikariCP连接池，但在1.4.1版本前，连接池配置由系统默认值定义，无法自定义配置。在1.4.1后，提供了一个方法能够配置HikariCP连接池。 <code>db.pool.config</code>为配置前缀，<code>xxx</code>为实际的hikariCP配置，如<code>db.pool.config.connectionTimeout</code>或<code>db.pool.config.maximumPoolSize</code>等。更多hikariCP的配置请查看<a target="_blank" rel="noopener" href="https://github.com/brettwooldridge/HikariCP">HikariCP</a> 需要注意的是，url,user,password会由<code>db.url.n</code>,<code>db.user</code>,<code>db.password</code>覆盖，driverClassName则是默认的MySQL8 driver（该版本mysql driver支持mysql5.x)</p>
+<h4 id="1-1-2-Remoting"><a href="#1-1-2-Remoting" class="headerlink" title="1.1.2. Remoting"></a>1.1.2. Remoting</h4><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.remote.server.grpc.sdk.max-inbound-message-size</td>
+<td>Nacos Server gRPC 能接收的单次最大客户端请求大小，单位byte</td>
+<td>正整数</td>
+<td>10 * 1024 * 1024</td>
+</tr>
+<tr>
+<td>nacos.remote.server.grpc.cluster.max-inbound-message-size</td>
+<td>Nacos Server gRPC 能接收的单次最大集群间请求大小，单位byte</td>
+<td>正整数</td>
+<td>10 * 1024 * 1024</td>
+</tr>
+<tr>
+<td>nacos.metric.grpc.server.executor.enabled</td>
+<td>Nacos Server gRPC线程池 监控能力开关</td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>nacos.metric.grpc.server.executor.interval</td>
+<td>Nacos Server gRPC线程池的间隔时间，单位为毫秒</td>
+<td>正整数</td>
+<td>15000</td>
+</tr>
+<tr>
+<td>nacos.metric.grpc.server.connection.enabled</td>
+<td>Nacos Server gRPC长连接 监控能力开关</td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>nacos.metric.grpc.server.connection.interval</td>
+<td>Nacos Server gRPC长连接的间隔时间，单位为<strong>秒</strong></td>
+<td>正整数</td>
+<td>15</td>
+</tr>
+<tr>
+<td>remote.executor.times.of.processors(-D)</td>
+<td>服务端，处理请求的线程池大小的倍数, 例如配置为2，表示线程池大小为2 * CPU</td>
+<td>正整数</td>
+<td>16</td>
+</tr>
+<tr>
+<td>remote.executor.queue.size(-D)</td>
+<td>服务端，处理请求的线程池队列大小</td>
+<td>正整数</td>
+<td>16384</td>
+</tr>
+</tbody></table>
+<h4 id="1-1-3-集群列表"><a href="#1-1-3-集群列表" class="headerlink" title="1.1.3. 集群列表"></a>1.1.3. 集群列表</h4><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.member.list</td>
+<td>Nacos Server 地址列表，在<code>cluster.conf</code>不存在时生效</td>
+<td><code>ip1:port1,ip2:port2</code></td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.member-change-event.queue.size</td>
+<td>Nacos Server 集群节点变更事件队列的大小，当集群节点通过<code>cluster.conf</code>或地址服务器变更时，会将变更事件放入该队列，该队列会异步通知Server中的一些机制，比如Distro&#x2F;Raft协议。</td>
+<td>正整数</td>
+<td>128</td>
+</tr>
+<tr>
+<td>nacos.core.member.lookup.type</td>
+<td>Nacos Server 集群节点的发现方式，支持配置文件<code>cluster.conf</code>和地址服务器模式</td>
+<td>file&#x2F;address-server</td>
+<td>file</td>
+</tr>
+<tr>
+<td>nacos.core.address-server.retry</td>
+<td>当<code>nacos.core.member.lookup.type</code>指定为<code>address-server</code>时生效，请求地址服务器的重试次数，超过重试次数后不再尝试从地址服务器获取NacosServer的集群列表</td>
+<td>正整数</td>
+<td>5</td>
+</tr>
+<tr>
+<td>address.server.domain</td>
+<td>当<code>nacos.core.member.lookup.type</code>指定为<code>address-server</code>时生效，地址服务器的域名</td>
+<td>域名</td>
+<td>jmenv.tbsite.net</td>
+</tr>
+<tr>
+<td>address.server.port</td>
+<td>当<code>nacos.core.member.lookup.type</code>指定为<code>address-server</code>时生效，地址服务器的端口</td>
+<td>0～65535</td>
+<td>8080</td>
+</tr>
+<tr>
+<td>address.server.url</td>
+<td>当<code>nacos.core.member.lookup.type</code>指定为<code>address-server</code>时生效，地址服务器的url</td>
+<td>字符串</td>
+<td>&#x2F;serverlist</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-Distro-协议"><a href="#1-2-Distro-协议" class="headerlink" title="1.2. Distro 协议"></a>1.2. Distro 协议</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.core.protocol.distro.data.sync.delayMs</td>
+<td>Distro协议同步数据的延迟时间，同一份数据处于延迟时间内多次变更时，会被合并为一次同步，单位为毫秒</td>
+<td>正整数</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.sync.timeoutMs</td>
+<td>Distro协议同步数据的超时时间，同步到目标节点时超过该时间，则会认为同步失败，进行延迟后重试，单位为毫秒</td>
+<td>正整数</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.sync.retryDelayMs</td>
+<td>Distro协议同步数据的重试间隔，当数据同步到目标节点失败时，进行该值时间的延迟后再重试，避免同步重试风暴，单位为毫秒</td>
+<td>正整数</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.verify.intervalMs</td>
+<td>Distro协议数据验证的间隔，已经同步过的数据，会定期进行数据有效性验证，验证失败会重新发起该数据的同步，单位为毫秒</td>
+<td>正整数</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.verify.timeoutMs</td>
+<td>Distro协议数据验证的超时时间，单位为毫秒</td>
+<td>正整数</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.load.retryDelayMs</td>
+<td>Distro协议快照数据加载的重试间隔，在节点刚启动时生效，单位为毫秒</td>
+<td>正整数</td>
+<td>30000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.distro.data.load.timeoutMs</td>
+<td>Distro协议快照数据加载的超时时间，超过该时间未读取到其他节点的快照数据，则认为加载快照失败，单位为毫秒</td>
+<td>正整数</td>
+<td>30000</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-Raft-协议"><a href="#1-3-Raft-协议" class="headerlink" title="1.3 Raft 协议"></a>1.3 Raft 协议</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.core.protocol.raft.election_timeout_ms</td>
+<td>Raft协议选举超时时间，单位ms</td>
+<td>正整数</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.snapshot_interval_secs</td>
+<td>Raft协议快照写入间隔时间，单位s</td>
+<td>正整数</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.core_thread_num</td>
+<td>Raft协议的核心线程数，用于处理Raft同步的请求线程数</td>
+<td>正整数</td>
+<td>8</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.cli_service_thread_num</td>
+<td>Raft协议的核心线程数，用于发起Raft同步数据的请求线程数</td>
+<td>正整数</td>
+<td>4</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.rpc_request_timeout_ms</td>
+<td>Raft协议请求的超时时间，单位ms</td>
+<td>正整数</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.max_byte_count_per_rpc</td>
+<td>Raft协议单次请求最大字节数</td>
+<td>正整数</td>
+<td>128 * 1024</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.max_entries_size</td>
+<td>Raft协议单个日志的最大个数</td>
+<td>正整数</td>
+<td>1024</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.max_body_size</td>
+<td>Raft协议发送日志的最大 body 大小</td>
+<td>正整数</td>
+<td>512 * 1024</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.max_append_buffer_size</td>
+<td>Raft协议日志存储缓冲区最大大小</td>
+<td>正整数</td>
+<td>256 * 1024</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.max_election_delay_ms</td>
+<td>Raft协议选举的最大随机间隔，选举定时器间隔会在指定时间之外随机的最大范围</td>
+<td>正整数</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>nacos.core.protocol.raft.strict_mode</td>
+<td>从<code>2.4.2</code>版本开始支持，Raft的启动校验是否采用严格模式，开启后，当raft无法选举时，引擎的readiness接口将返回500</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<h3 id="1-4-Naming模块"><a href="#1-4-Naming模块" class="headerlink" title="1.4. Naming模块"></a>1.4. Naming模块</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.naming.expireInstance</td>
+<td>是否自动摘除临时实例</td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>nacos.naming.data.warmup</td>
+<td>从<code>2.4.2</code>版本开始支持，是否在启动时校验数据是否预热，开启可能造成Server的readiness接口返回500，需要等待预热完成，启动时间变长</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.naming.clean.empty-service.interval</td>
+<td>Naming模块的空服务清理间隔，单位毫秒</td>
+<td>正整数</td>
+<td>60 * 1000</td>
+</tr>
+<tr>
+<td>nacos.naming.clean.empty-service.expired-time</td>
+<td>Naming模块的空服务过期时间，过期的空服务会被清理，单位毫秒</td>
+<td>正整数</td>
+<td>60 * 1000</td>
+</tr>
+<tr>
+<td>nacos.naming.clean.expired-metadata.interval</td>
+<td>Naming模块的元数据清理间隔，单位毫秒</td>
+<td>正整数</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>nacos.naming.clean.expired-metadata.expired-time</td>
+<td>Naming模块的元数据过期时间，过期的元数据会被清理，单位毫秒</td>
+<td>正整数</td>
+<td>60 * 1000</td>
+</tr>
+<tr>
+<td>nacos.naming.client.expired.time</td>
+<td>临时Client对应数据的过期时间，当Distro协议停止对该Client的数据进行续约且时间超过该值时，该Client数据将被删除，主要应对Nacos Server之间断网的场景，单位毫秒</td>
+<td>正整数</td>
+<td>3 * 60 * 1000</td>
+</tr>
+<tr>
+<td>nacos.naming.push.pushTaskDelay</td>
+<td>服务数据推送的延迟时间，同一个人服务处于延迟时间内多次变更时，会被合并为一次推送，单位为毫秒</td>
+<td>正整数</td>
+<td>500</td>
+</tr>
+<tr>
+<td>nacos.naming.push.pushTaskTimeout</td>
+<td>服务数据推送的超时时间，超过该时间未收到客户端的确认，将延迟后重试，单位为毫秒</td>
+<td>正整数</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>nacos.naming.push.pushTaskRetryDelay</td>
+<td>服务数据推送失败后的重试间隔时间，单位为毫秒</td>
+<td>正整数</td>
+<td>1000</td>
+</tr>
+</tbody></table>
+<h3 id="1-5-Config模块"><a href="#1-5-Config模块" class="headerlink" title="1.5. Config模块"></a>1.5. Config模块</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.config.push.maxRetryTime</td>
+<td>配置变更数据推送的延迟时间，同一个人配置处于延迟时间内多次变更时，会被合并为一次推送，单位为毫秒</td>
+<td>正整数</td>
+<td>50</td>
+</tr>
+<tr>
+<td>nacos.config.retention.days</td>
+<td>Nacos配置中心配置变更历史保留天数，超过该时间的配置变更历史会被删除</td>
+<td>正整数</td>
+<td>30</td>
+</tr>
+<tr>
+<td>nacos.config.search.max_capacity</td>
+<td>Nacos配置中心，根据配置内容查找配置功能的最大队列个数，由于基于内容的检索十分消耗性能，因此对该功能的并发进行限制，最大不可超过32</td>
+<td>0～32</td>
+<td>4</td>
+</tr>
+<tr>
+<td>nacos.config.search.max_thread</td>
+<td>根据配置内容查找配置功能的最大线程数，最大并发数，最大不可超过16</td>
+<td>0～16</td>
+<td>2</td>
+</tr>
+<tr>
+<td>nacos.config.search.wait_timeout</td>
+<td>根据配置内容查找配置功能的等待超时时间，超过等待时间的查找任务会直接失败丢弃，单位毫秒</td>
+<td>正整数</td>
+<td>8000</td>
+</tr>
+<tr>
+<td>nacos.config.derby.ops.enabled</td>
+<td>当使用derby数据库作为存储时，是否开启derby的相关运维接口</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.persistence.sql.derby.limit.enabled</td>
+<td>当使用derby数据库作为存储时,限制derby数据库可执行的SQL范围为DML和部分DDL，从<code>2.4.1</code>版本开始支持</td>
+<td>true&#x2F;false</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<h3 id="1-6-CMDB模块"><a href="#1-6-CMDB模块" class="headerlink" title="1.6. CMDB模块"></a>1.6. CMDB模块</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.cmdb.loadDataAtStart</td>
+<td>是否打开CMDB</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.cmdb.dumpTaskInterval</td>
+<td>全量dump的间隔，单位为秒</td>
+<td>正整数</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>nacos.cmdb.eventTaskInterval</td>
+<td>变更事件的拉取间隔，单位为秒</td>
+<td>正整数</td>
+<td>10</td>
+</tr>
+<tr>
+<td>nacos.cmdb.labelTaskInterval</td>
+<td>标签集合的拉取间隔，单位为秒</td>
+<td>正整数</td>
+<td>300</td>
+</tr>
+</tbody></table>
+<h3 id="1-7-Istio模块"><a href="#1-7-Istio模块" class="headerlink" title="1.7. Istio模块"></a>1.7. Istio模块</h3><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.extension.naming.istio.enabled</td>
+<td>是否加载istio模块</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.istio.mcp.server.enabled</td>
+<td>是否开启Istio MCP协议</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.istio.mcp.server.port</td>
+<td>Istio MCP协议监听端口</td>
+<td>正整数</td>
+<td>18848</td>
+</tr>
+</tbody></table>
+<h3 id="1-8-插件"><a href="#1-8-插件" class="headerlink" title="1.8. 插件"></a>1.8. 插件</h3><h4 id="1-8-1-鉴权插件"><a href="#1-8-1-鉴权插件" class="headerlink" title="1.8.1. 鉴权插件"></a>1.8.1. 鉴权插件</h4><p>关于如何开发鉴权插件，请参考<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/auth-plugin/">鉴权插件</a></p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.core.auth.enabled</td>
+<td>Nacos是否开启鉴权</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.core.auth.system.type</td>
+<td>Nacos鉴权插件的类型</td>
+<td>nacos&#x2F;ldap&#x2F;自定义插件类型</td>
+<td>nacos</td>
+</tr>
+<tr>
+<td>nacos.core.auth.server.identity.key</td>
+<td>Nacos Server节点身份信息的key，用户Server节点之间通信的识别，当开启鉴权时为必填项</td>
+<td>字符串</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.core.auth.server.identity.value</td>
+<td>Nacos Server节点身份信息的value，用户Server节点之间通信的识别，当开启鉴权时为必填项</td>
+<td>字符串</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.core.auth.enable.userAgentAuthWhite</td>
+<td>Nacos Server使用UserAgent来进行Server节点之间通信的识别，在1.4.1版本后仅作为升级时的兼容，开启后会存在安全问题，后续版本将移除该参数</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<p>同时对于Nacos默认鉴权插件的使用及更多默认鉴权插件的配置项，请参考<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/guide/user/auth/#%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0">权限校验</a></p>
+<h4 id="1-8-2-数据源插件"><a href="#1-8-2-数据源插件" class="headerlink" title="1.8.2. 数据源插件"></a>1.8.2. 数据源插件</h4><p>其他和数据库相关的开发，请参考<a href="#112-%E6%95%B0%E6%8D%AE%E5%BA%93">全局参数-数据库</a></p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>spring.sql.init.platform</td>
+<td>Nacos Server 使用的数据库类型</td>
+<td>mysql&#x2F;空，指定为空时会根据<code>nacos.standalone</code>判断使用derby数据库还是mysql数据库；在使用<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/datasource-plugin/">数据源插件</a>时，可以指定为插件对应的数据库值，比如oracle或postgresql</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.plugin.datasource.log.enabled｜Nacos Server 是否开启SQL日志打印，开启后会打印每一次执行的SQL，方便进行插件开发时的问题排查，但是较为损耗性能，日常状态建议关闭</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="1-8-3-环境变量插件"><a href="#1-8-3-环境变量插件" class="headerlink" title="1.8.3. 环境变量插件"></a>1.8.3. 环境变量插件</h4><p>关于如何开发环境变量插件，请参考<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/custom-environment-plugin/">环境变量插件</a></p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.custom.environment.enabled</td>
+<td>Nacos Server 是否开启环境变量插件</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<h4 id="1-8-4-反脆弱插件"><a href="#1-8-4-反脆弱插件" class="headerlink" title="1.8.4. 反脆弱插件"></a>1.8.4. 反脆弱插件</h4><p>反脆弱插件的开发，请参考<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/control-plugin/">反脆弱插件</a></p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.plugin.control.manager.type</td>
+<td>Nacos反脆弱插件的类型</td>
+<td>nacos&#x2F;其他自定义插件类型</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.plugin.control.rule.external.storage</td>
+<td>Nacos反脆弱插件，反脆弱规则外部存储类型，需要自行实现</td>
+<td>字符串</td>
+<td>null</td>
+</tr>
+<tr>
+<td>nacos.plugin.control.rule.local.basedir</td>
+<td>Nacos反脆弱插件，反脆弱规则本地存储目录</td>
+<td>文件路径</td>
+<td>${nacos.home}&#x2F;data&#x2F;</td>
+</tr>
+</tbody></table>
+<h4 id="1-8-5-配置变更插件"><a href="#1-8-5-配置变更插件" class="headerlink" title="1.8.5. 配置变更插件"></a>1.8.5. 配置变更插件</h4><p>反脆弱插件的开发，请参考<a target="_blank" rel="noopener" href="https://nacos.io/docs/latest/plugin/config-change-plugin/">配置变更插件</a></p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>含义</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nacos.core.config.plugin.${configChangePluginName}.enabled&#x3D;true</td>
+<td>Nacos Server 是否开启配置变更插件</td>
+<td>true&#x2F;false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nacos.core.config.plugin.${configChangePluginName}.${propertyKey}&#x3D;${propertyValue}</td>
+<td>配置变更插件的配置项</td>
+<td>插件自定义</td>
+<td>插件自定义</td>
+</tr>
+</tbody></table>
+<h2 id="2-镜像环境变量"><a href="#2-镜像环境变量" class="headerlink" title="2. 镜像环境变量"></a>2. 镜像环境变量</h2><p>属性配置列表</p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>描述</th>
+<th>选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MODE</td>
+<td>系统启动方式: 集群&#x2F;单机，对应<code>nacos.standalone</code></td>
+<td>cluster&#x2F;standalone 默认 <strong>cluster</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVERS</td>
+<td>集群地址，对应<code>nacos.member.list</code></td>
+<td>p1空格ip2 空格ip3</td>
+</tr>
+<tr>
+<td>PREFER_HOST_MODE</td>
+<td>支持IP还是域名模式，对应<code>nacos.inetutils.prefer-hostname-over-ip</code></td>
+<td>hostname&#x2F;ip 默认<strong>IP</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVER_PORT</td>
+<td>Nacos 运行端口，对应<code>server.port</code></td>
+<td>默认<strong>8848</strong></td>
+</tr>
+<tr>
+<td>NACOS_SERVER_IP</td>
+<td>多网卡模式下可以指定IP，对应<code>nacos.server.ip</code></td>
+<td></td>
+</tr>
+<tr>
+<td>SPRING_DATASOURCE_PLATFORM</td>
+<td>单机模式下支持MYSQL数据库，对应<code>spring.sql.init.platform</code></td>
+<td>mysql &#x2F; 空 默认:空</td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_HOST</td>
+<td>数据库 连接地址</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_PORT</td>
+<td>数据库端口</td>
+<td>默认 : <strong>3306</strong></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_DB_NAME</td>
+<td>数据库库名</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_USER</td>
+<td>数据库用户名</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_PASSWORD</td>
+<td>数据库用户密码</td>
+<td></td>
+</tr>
+<tr>
+<td>MYSQL_SERVICE_DB_PARAM</td>
+<td>数据库连接参数</td>
+<td>默认:<strong>characterEncoding&#x3D;utf8&amp;connectTimeout&#x3D;1000&amp;socketTimeout&#x3D;3000&amp;autoReconnect&#x3D;true&amp;useSSL&#x3D;false</strong></td>
+</tr>
+<tr>
+<td>MYSQL_DATABASE_NUM</td>
+<td>数据库个数</td>
+<td>默认:<strong>1</strong></td>
+</tr>
+<tr>
+<td>JVM_XMS</td>
+<td>-Xms</td>
+<td>默认 :1g</td>
+</tr>
+<tr>
+<td>JVM_XMX</td>
+<td>-Xmx</td>
+<td>默认 :1g</td>
+</tr>
+<tr>
+<td>JVM_XMN</td>
+<td>-Xmn</td>
+<td>512m</td>
+</tr>
+<tr>
+<td>JVM_MS</td>
+<td>- XX</td>
+<td>默认 :128m</td>
+</tr>
+<tr>
+<td>JVM_MMS</td>
+<td>-XX</td>
+<td>默认 :320m</td>
+</tr>
+<tr>
+<td>NACOS_DEBUG</td>
+<td>是否开启远程DEBUG</td>
+<td>y&#x2F;n 默认</td>
+</tr>
+<tr>
+<td>TOMCAT_ACCESSLOG_ENABLED</td>
+<td><code>server.tomcat.accesslog.enabled</code></td>
+<td>默认</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_SYSTEM_TYPE</td>
+<td>权限系统类型选择,目前只支持nacos类型</td>
+<td>默认</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_ENABLE</td>
+<td>是否开启权限系统，对应<code>nacos.core.auth.enabled</code></td>
+<td>默认</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_TOKEN_EXPIRE_SECONDS</td>
+<td>token 失效时间</td>
+<td>默认 :18000</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_TOKEN</td>
+<td>token</td>
+<td><code>注意：该环境变量的默认值在Nacos 2.2.1版本中已移除，开启鉴权时需要指定</code></td>
+</tr>
+<tr>
+<td>NACOS_AUTH_CACHE_ENABLE</td>
+<td>权限缓存开关 ,开启后权限缓存的更新默认有15秒的延迟</td>
+<td>默认 : false</td>
+</tr>
+<tr>
+<td>MEMBER_LIST</td>
+<td>通过环境变量的方式设置集群地址</td>
+<td>例子:192.168.16.101:8847?raft_port&#x3D;8807,192.168.16.101?raft_port&#x3D;8808,192.168.16.101:8849?raft_port&#x3D;8809</td>
+</tr>
+<tr>
+<td>EMBEDDED_STORAGE</td>
+<td>是否开启集群嵌入式存储模式</td>
+<td><code>embedded</code> 默认 : none</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_CACHE_ENABLE</td>
+<td>nacos.core.auth.caching.enabled</td>
+<td>default : false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_USER_AGENT_AUTH_WHITE_ENABLE</td>
+<td>nacos.core.auth.enable.userAgentAuthWhite</td>
+<td>default : false</td>
+</tr>
+<tr>
+<td>NACOS_AUTH_IDENTITY_KEY</td>
+<td>nacos.core.auth.server.identity.key</td>
+<td><code>注意：该环境变量的默认值在Nacos 2.2.1版本中已移除，开启鉴权时需要指定</code></td>
+</tr>
+<tr>
+<td>NACOS_AUTH_IDENTITY_VALUE</td>
+<td>nacos.core.auth.server.identity.value</td>
+<td><code>注意：该环境变量的默认值在Nacos 2.2.1版本中已移除，开启鉴权时需要指定</code></td>
+</tr>
+<tr>
+<td>NACOS_SECURITY_IGNORE_URLS</td>
+<td>nacos.security.ignore.urls</td>
+<td>default : <code>/,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**</code></td>
+</tr>
+<tr>
+<td>DB_POOL_CONNECTION_TIMEOUT</td>
+<td>数据库连接池超时时间，单位为毫秒</td>
+<td>默认 : <strong>30000</strong></td>
+</tr>
+<tr>
+<td>NACOS_CONSOLE_UI_ENABLED</td>
+<td>nacos.console.ui.enabled</td>
+<td>default : <code>true</code></td>
+</tr>
+<tr>
+<td>NACOS_CORE_PARAM_CHECK_ENABLED</td>
+<td>nacos.core.param.check.enabled</td>
+<td>default : <code>true</code></td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.740777352.xyz">xhang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.740777352.xyz/2025/02/13/nacos/">https://blog.740777352.xyz/2025/02/13/nacos/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.740777352.xyz" target="_blank">xhang's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nacos/">nacos</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" title="nacos配置变更"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">nacos配置变更</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2025/02/13/2025-02-13-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day04/" title="Golang整体复习Day04"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Golang整体复习Day04</div></div><div class="info-2"><div class="info-item-1">Array(数组)数组是同一种数据类型元素的集合。 在Go语言中，数组从声明时就确定，使用时可以修改数组成员，但是数组大小不可变化。 基本语法： 12// 定义一个长度为3元素类型为int的数组avar a [3]int  数组定义：1var 数组变量名 [元素数量]T  比如：var a [5]int， 数组的长度必须是常量，并且长度是数组类型的一部分。一旦定义，长度不能变。 [5]int和[10]int是不同的类型。 123var a [3]intvar b [4]inta = b //不可以这样做，因为此时a和b是不同的类型  数组可以通过下标进行访问，下标是从0开始，最后一个元素下标是：len-1，访问越界（下标在合法范围之外），则触发访问越界，会panic。 数组的初始化数组的初始化也有很多方式。 方法一初始化数组时可以使用初始化列表来设置数组元素的值。 12345678func main() &#123;	var testArray [3]int                        //数组会初始化为int类型的零值	var numArray =...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" title="nacos配置变更"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-13</div><div class="info-item-2">nacos配置变更</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">xhang</div><div class="author-info-description">徐航的个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E7%B3%BB%E7%BB%9F%E5%8F%82%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">Nacos 系统参数介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Nacos-Server"><span class="toc-number">2.</span> <span class="toc-text">1. Nacos Server</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%85%A8%E5%B1%80%E5%8F%82%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">1.1. 全局参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-1-%E5%9F%BA%E7%A1%80%E5%8F%82%E6%95%B0"><span class="toc-number">2.1.1.</span> <span class="toc-text">1.1.1. 基础参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-2-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.1.2.</span> <span class="toc-text">1.1.2. 数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-2-Remoting"><span class="toc-number">2.1.3.</span> <span class="toc-text">1.1.2. Remoting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-3-%E9%9B%86%E7%BE%A4%E5%88%97%E8%A1%A8"><span class="toc-number">2.1.4.</span> <span class="toc-text">1.1.3. 集群列表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Distro-%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.2.</span> <span class="toc-text">1.2. Distro 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Raft-%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 Raft 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Naming%E6%A8%A1%E5%9D%97"><span class="toc-number">2.4.</span> <span class="toc-text">1.4. Naming模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Config%E6%A8%A1%E5%9D%97"><span class="toc-number">2.5.</span> <span class="toc-text">1.5. Config模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-CMDB%E6%A8%A1%E5%9D%97"><span class="toc-number">2.6.</span> <span class="toc-text">1.6. CMDB模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-Istio%E6%A8%A1%E5%9D%97"><span class="toc-number">2.7.</span> <span class="toc-text">1.7. Istio模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-8-%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.</span> <span class="toc-text">1.8. 插件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-8-1-%E9%89%B4%E6%9D%83%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.1.</span> <span class="toc-text">1.8.1. 鉴权插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-8-2-%E6%95%B0%E6%8D%AE%E6%BA%90%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.2.</span> <span class="toc-text">1.8.2. 数据源插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-8-3-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.3.</span> <span class="toc-text">1.8.3. 环境变量插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-8-4-%E5%8F%8D%E8%84%86%E5%BC%B1%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.4.</span> <span class="toc-text">1.8.4. 反脆弱插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-8-5-%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4%E6%8F%92%E4%BB%B6"><span class="toc-number">2.8.5.</span> <span class="toc-text">1.8.5. 配置变更插件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%95%9C%E5%83%8F%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">2. 镜像环境变量</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" title="Nginx 跨域配置">Nginx 跨域配置</a><time datetime="2025-02-13T08:24:00.000Z" title="发表于 2025-02-13 16:24:00">2025-02-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/nginx%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" title="Nginx 超时问题">Nginx 超时问题</a><time datetime="2025-02-13T08:14:00.000Z" title="发表于 2025-02-13 16:14:00">2025-02-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/etcd-tools/" title="etcd 工具和客户端库">etcd 工具和客户端库</a><time datetime="2025-02-13T07:14:00.000Z" title="发表于 2025-02-13 15:14:00">2025-02-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" title="etcdctl命令整理">etcdctl命令整理</a><time datetime="2025-02-13T02:09:00.000Z" title="发表于 2025-02-13 10:09:00">2025-02-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/2025-02-13-golanghttp%E5%BA%93%E8%A7%A3%E6%9E%90/" title="Golanghttp库解析">Golanghttp库解析</a><time datetime="2025-02-13T02:09:00.000Z" title="发表于 2025-02-13 10:09:00">2025-02-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By xhang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
