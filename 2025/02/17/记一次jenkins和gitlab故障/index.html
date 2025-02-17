@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>xhang's blog | xhang's blog</title><meta name="author" content="xhang"><meta name="copyright" content="xhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="记一次jenkins和gitlab故障1. 问题描述笔者所在公司主要的开发语言是java和go，使用gitlab作为代码管理工具，使用jenkins作为CI&#x2F;CD工具。公司封装了自己的运维平台，通过gitlab的webhook触发jenkins的构建和部署。然而之前的同事在测试环境做了一些gitlab的cicd配置，集成到ack集群中，导致项目部署的时候，jenkins构建的内容会被gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xhang&#39;s blog">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="记一次jenkins和gitlab故障1. 问题描述笔者所在公司主要的开发语言是java和go，使用gitlab作为代码管理工具，使用jenkins作为CI&#x2F;CD工具。公司封装了自己的运维平台，通过gitlab的webhook触发jenkins的构建和部署。然而之前的同事在测试环境做了一些gitlab的cicd配置，集成到ack集群中，导致项目部署的时候，jenkins构建的内容会被gi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.740777352.xyz/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-02-17T05:36:09.000Z">
+<meta property="article:modified_time" content="2025-02-17T05:44:22.000Z">
+<meta property="article:author" content="xhang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.740777352.xyz/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "",
+  "url": "https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/",
+  "image": "https://blog.740777352.xyz/img/butterfly-icon.png",
+  "datePublished": "2025-02-17T05:36:09.000Z",
+  "dateModified": "2025-02-17T05:44:22.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "xhang",
+      "url": "https://blog.740777352.xyz/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'xhang\'s blog',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/fluid.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">xhang's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">xhang's blog</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">无标题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-17T05:36:09.000Z" title="发表于 2025-02-17 13:36:09">2025-02-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-17T05:44:22.000Z" title="更新于 2025-02-17 13:44:22">2025-02-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="记一次jenkins和gitlab故障"><a href="#记一次jenkins和gitlab故障" class="headerlink" title="记一次jenkins和gitlab故障"></a>记一次jenkins和gitlab故障</h1><h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p>笔者所在公司主要的开发语言是java和go，使用gitlab作为代码管理工具，使用jenkins作为CI&#x2F;CD工具。<br>公司封装了自己的运维平台，通过gitlab的webhook触发jenkins的构建和部署。然而之前的同事在测试环境做了一些gitlab的cicd配置，集成到ack集群中，导致项目部署的时候，jenkins构建的内容会被gitlab的cicd覆盖。由于主要使用的还是jenkins，因此需要停止gitlab的cicd，但是由于gitlab runner关联了ack集群，导致fluxcd会锁定应用版本，检查配置文件与gitlab中的是否一致，导致无法部署。jenkins部署无法生效。</p>
+<h2 id="2-问题排查"><a href="#2-问题排查" class="headerlink" title="2. 问题排查"></a>2. 问题排查</h2><h3 id="2-1-排查gitlab的cicd配置"><a href="#2-1-排查gitlab的cicd配置" class="headerlink" title="2.1 排查gitlab的cicd配置"></a>2.1 排查gitlab的cicd配置</h3><p>故障项目使用的是gitlab的插件以及runner，在gitlab的cicd配置中，配置了runner，并且关联了ack集群。因此笔者首先暂停了git在分支代码出现变化了，触发runner，但是依然会被覆盖，经过查询<br>发现gitlab的runner会关联ack集群，生成flux-system命名空间，以及一些crd，通过这些crd与git仓库关联，读取配置并应用，然后尝试删除crd，失败，定位到git仓库的指定文件，笔者本来想直接修改，同事选择直接卸载了gitlab的runner插件，也达成效果。</p>
+<h2 id="3-问题总结"><a href="#3-问题总结" class="headerlink" title="3. 问题总结"></a>3. 问题总结</h2><ol>
+<li><p>在使用多个CI&#x2F;CD工具时，需要明确各个工具的职责范围，避免功能重叠导致冲突。</p>
+</li>
+<li><p>GitLab Runner与ACK集群集成后，会通过FluxCD进行配置同步，这种机制在某些场景下可能会与其他部署工具产生冲突。</p>
+</li>
+<li><p>解决此类问题时，可以采取以下方案：</p>
+<ul>
+<li>停用或卸载冲突的GitLab Runner插件</li>
+<li>清理相关的CRD资源</li>
+<li>确保团队使用统一的CI&#x2F;CD流程</li>
+</ul>
+</li>
+<li><p>建议在测试环境进行配置更改时，需要评估对现有系统的影响，并做好文档记录，方便后续维护和故障排查。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.740777352.xyz">xhang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/">https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.740777352.xyz" target="_blank">xhang's blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">使用github actions自动发布hexo博客</div></div><div class="info-2"><div class="info-item-1">使用github actions自动发布hexo博客假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。 1. 设置密钥首先在本地生成密钥对 1ssh-keygen -t rsa -C &quot;your_email@example.com&quot;  在 src 仓库中创建一个名为 id_rsa 的密钥对，并将其添加到 Github 仓库的 Settings -&gt; Secrets -&gt; New repository secret 中，命名为 HEXO_DEPLOY_PRI。 接着设置 prd 仓库的 Settings -&gt; Deploy keys -&gt; Add deploy key 中，命名为 HEXO_DEPLOY_PUB，并勾选 Allow write access。 2. 设置 Github Actions在 src 仓库中创建一个名为...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">xhang</div><div class="author-info-description">徐航的个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C"><span class="toc-number">1.</span> <span class="toc-text">记一次jenkins和gitlab故障</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">1. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">1.2.</span> <span class="toc-text">2. 问题排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%8E%92%E6%9F%A5gitlab%E7%9A%84cicd%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 排查gitlab的cicd配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93"><span class="toc-number">1.3.</span> <span class="toc-text">3. 问题总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" title="无标题">无标题</a><time datetime="2025-02-17T05:36:09.000Z" title="发表于 2025-02-17 13:36:09">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客">使用github actions自动发布hexo博客</a><time datetime="2025-02-17T02:21:26.000Z" title="发表于 2025-02-17 10:21:26">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" title="Golang整体复习Day07">Golang整体复习Day07</a><time datetime="2025-02-16T16:00:00.000Z" title="发表于 2025-02-17 00:00:00">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" title="Golang整体复习Day06">Golang整体复习Day06</a><time datetime="2025-02-15T16:00:00.000Z" title="发表于 2025-02-16 00:00:00">2025-02-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" title="Nginx 跨域配置">Nginx 跨域配置</a><time datetime="2025-02-13T08:24:00.000Z" title="发表于 2025-02-13 16:24:00">2025-02-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By xhang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
