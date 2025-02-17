@@ -1,179 +1,824 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>xhang's blog</title><meta name="author" content="xhang"><meta name="copyright" content="xhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="徐航的个人博客">
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="徐航的个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="xhang&#39;s blog">
 <meta property="og:url" content="https://blog.740777352.xyz/index.html">
 <meta property="og:site_name" content="xhang&#39;s blog">
 <meta property="og:description" content="徐航的个人博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.740777352.xyz/img/butterfly-icon.png">
 <meta property="article:author" content="xhang">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.740777352.xyz/img/butterfly-icon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.740777352.xyz/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
+<meta name="twitter:card" content="summary_large_image">
   
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
+  
+  
+  <title>xhang&#39;s blog</title>
 
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
-      const theme = saveToLocal.get('theme')
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
     
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
         
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
   
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'xhang\'s blog',
-  isHighlightShrink: false,
-  isToc: false,
-  pageType: 'home'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/fluid.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">xhang's blog</span></a></span><div id="menus"></div></nav><div id="site-info"><h1 id="site-title">xhang's blog</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx404%E9%97%AE%E9%A2%98/" title="无标题">无标题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-17T06:11:50.000Z" title="发表于 2025-02-17 14:11:50">2025-02-17</time></span></div><div class="content">记一次nginx404问题事故描述笔者所在公司使用的是nginx作为静态资源服务器，但是最近发现一个奇怪的问题，就是访问静态资源的时候，会出现404错误。 事故排查笔者在浏览器控制台发现，访问的资源路径是OSS给出的地址，但是oss对应的路径上并没有对应的资源。因此报404错误 解决方法：首先考虑把静态资源放到oss上去，但是由于服务是自动cicd的，所以无法这样处理，切可能会导致资源更新不及时的问题。 因此笔者考虑新建CDN域名，回源地址设置为nginx服务器的IP，即回源到本地的static目录，然后在nginx中添加oss域名的虚拟主机，把静态资源放到配置里面去。这里笔者还闹了个笑话，改完配置后没有重载nginx，导致配置不生效，白白浪费了半个小时。 总结：修改nginx配置文件时，切记先备份再操作，且修改完之后一定要-t检查-s reload加载配置。 遇到类似404问题，处理方案：检查404地址，cdn→回源地址。 </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" title="无标题">无标题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-17T05:36:09.000Z" title="发表于 2025-02-17 13:36:09">2025-02-17</time></span></div><div class="content">记一次jenkins和gitlab故障1. 问题描述笔者所在公司主要的开发语言是java和go，使用gitlab作为代码管理工具，使用jenkins作为CI&#x2F;CD工具。公司封装了自己的运维平台，通过gitlab的webhook触发jenkins的构建和部署。然而之前的同事在测试环境做了一些gitlab的cicd配置，集成到ack集群中，导致项目部署的时候，jenkins构建的内容会被gitlab的cicd覆盖。由于主要使用的还是jenkins，因此需要停止gitlab的cicd，但是由于gitlab runner关联了ack集群，导致fluxcd会锁定应用版本，检查配置文件与gitlab中的是否一致，导致无法部署。jenkins部署无法生效。 2. 问题排查2.1...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客">使用github actions自动发布hexo博客</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-17T02:21:26.000Z" title="发表于 2025-02-17 10:21:26">2025-02-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">使用github actions自动发布hexo博客假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。 1. 设置密钥首先在本地生成密钥对 1ssh-keygen -t rsa -C &quot;your_email@example.com&quot;  在 src 仓库中创建一个名为 id_rsa 的密钥对，并将其添加到 Github 仓库的 Settings -&gt; Secrets -&gt; New repository secret 中，命名为 HEXO_DEPLOY_PRI。 接着设置 prd 仓库的 Settings -&gt; Deploy keys -&gt; Add deploy key 中，命名为 HEXO_DEPLOY_PUB，并勾选 Allow write access。 2. 设置 Github Actions在 src 仓库中创建一个名为...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" title="Golang整体复习Day07">Golang整体复习Day07</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-16T16:00:00.000Z" title="发表于 2025-02-17 00:00:00">2025-02-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">区别于C&#x2F;C++中的指针，Go语言中的指针不能进行偏移和运算，是安全指针。 要搞明白Go语言中的指针需要先知道3个概念：指针地址、指针类型和指针取值。 Go语言中的指针任何程序数据载入内存后，在内存都有他们的地址，这就是指针。而为了保存一个数据在内存中的地址，我们就需要指针变量。 比如，“永远不要高估自己”这句话是我的座右铭，我想把它写入程序中，程序一启动这句话是要加载到内存（假设内存地址0x123456），我在程序中把这段话赋值给变量A，把内存地址赋值给变量B。这时候变量B就是一个指针变量。通过变量A和变量B都能找到我的座右铭。 Go语言中的指针不能进行偏移和运算，因此Go语言中的指针操作非常简单，我们只需要记住两个符号：&amp;（取地址）和*（根据地址取值）。 指针地址和指针类型每个变量在运行时都拥有一个地址，这个地址代表变量在内存中的位置。Go语言中使用&amp;字符放在变量前面对变量进行“取地址”操作。...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" title="Golang整体复习Day06">Golang整体复习Day06</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-15T16:00:00.000Z" title="发表于 2025-02-16 00:00:00">2025-02-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">函数是组织好的、可重复使用的、用于执行指定任务的代码块。本文介绍了Go语言中函数的相关内容。 函数Go语言中支持函数、匿名函数和闭包，并且函数在Go语言中属于“一等公民”。 函数定义Go语言中定义函数使用func关键字，具体格式如下： 123func 函数名(参数)(返回值)&#123;    函数体&#125;  其中：  函数名：由字母、数字、下划线组成。但函数名的第一个字母不能是数字。在同一个包内，函数名也称不能重名（包的概念详见后文）。 参数：参数由参数变量和参数变量的类型组成，多个参数之间使用,分隔。 返回值：返回值由返回值变量和其变量类型组成，也可以只写返回值的类型，多个返回值必须用()包裹，并用,分隔。 函数体：实现指定功能的代码块。  我们先来定义一个求两个数之和的函数： 123func intSum(x int, y int) int &#123;	return x + y&#125;  函数的参数和返回值都是可选的，例如我们可以实现一个既不需要参数也没有返回值的函数： 123func sayHello()...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" title="Nginx 跨域配置">Nginx 跨域配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T08:24:00.000Z" title="发表于 2025-02-13 16:24:00">2025-02-13</time></span></div><div class="content">在 Nginx 中实现跨域（CORS，Cross-Origin Resource Sharing）是通过配置 HTTP 响应头来允许浏览器跨域访问资源。以下是详细的配置方法和解析：  1. 跨域问题的背景 跨域 是指浏览器从一个域名（源）向另一个域名发起请求时，由于浏览器的同源策略（Same-Origin Policy），请求会被阻止。 CORS 是一种机制，允许服务器声明哪些源可以访问其资源。   2. Nginx 跨域配置2.1 基本配置在 Nginx 配置文件中，添加以下配置以支持跨域请求： 123456789101112131415161718192021222324252627server &#123;    listen 80;    server_name example.com;    location / &#123;        # 允许所有域名跨域访问        add_header &#x27;Access-Control-Allow-Origin&#x27; &#x27;*&#x27;;        # 允许的请求方法       ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/nginx%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" title="Nginx 超时问题">Nginx 超时问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T08:14:00.000Z" title="发表于 2025-02-13 16:14:00">2025-02-13</time></span></div><div class="content">背景概述最近计划着重分析一下线上各api的HTTP响应耗时情况，检查是否有接口平均耗时、99分位耗时等相关指标过大的情况，了解到nginx统计请求耗时有四个指标：request_time、upstream_response_time、upstream_connect_time与upstream_header_time，在查找资料的过程中，发现无论是nginx官方文档还是热心网友们的分享，都并没有让自己感觉特别详细、明白地说清楚了这四个指标详细具体含义的资料，于是自己动手探究了一番nginx源码，尝试从其中找出这4个指标的代码级别具体含义。 特别说明：本文代码分析基于nginx...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/etcd-tools/" title="etcd 工具和客户端库">etcd 工具和客户端库</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T07:14:00.000Z" title="发表于 2025-02-13 15:14:00">2025-02-13</time></span></div><div class="content">以下是关于 etcd 工具和客户端库的汇总翻译自：https://etcd.io/docs/v3.5/integrations/ 库和工具etcd 工具和客户端库列表。请注意，以下提到的第三方库和工具（不托管在 https://github.com/etcd-io 上）没有经过 etcd 团队的测试和维护。在使用它们之前，建议用户先阅读和调查这些库和工具。 工具 etcdctl - etcd 的命令行客户端。 etcd-dump - 用于转储&#x2F;恢复 etcd 的命令行工具。 etcd-fs - 基于 FUSE 的 etcd 文件系统。 etcddir - 实时同步 etcd 和本地目录，适用于 Windows 和 Linux。 etcd-browser - 一个基于 AngularJS 的 etcd 网页键值编辑器。 etcd-lock - 使用 etcd 实现的主节点选举和分布式读&#x2F;写锁，支持 v2。 etcd-console - 一个基于 PHP 的 etcd 网页键值编辑器。 etcd-viewer - 用 Java 编写的 etcd...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" title="etcdctl命令整理">etcdctl命令整理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T02:09:00.000Z" title="发表于 2025-02-13 10:09:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/kubernetes/">kubernetes</a></span></div><div class="content">etcdctl 是 etcd 的命令行客户端工具，用于与 etcd 集群进行交互。下面是 etcdctl 的一些常用选项和命令，帮助你进行数据存取和集群管理等操作。 常用选项在执行任何 etcdctl 命令时，你通常需要指定以下选项来配置连接参数：  --endpoints=[]：指定 etcd 集群的一个或多个端点地址，通常是 http://ip:port 格式。 --cacert=&quot;&quot;：指定根证书文件路径，用于 TLS 连接。 --cert=&quot;&quot;：指定客户端证书文件路径，用于 TLS 连接。 --key=&quot;&quot;：指定客户端私钥文件路径，用于 TLS 连接。 --user=&quot;&quot;：指定用户名和密码，格式为 username:password，用于身份验证。 --dial-timeout=&quot;&quot;：指定建立连接的超时时长。 --command-timeout=&quot;&quot;：指定命令执行的超时时长。  常用命令数据操作命令 put &lt;key&gt;...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/2025-02-13-golanghttp%E5%BA%93%E8%A7%A3%E6%9E%90/" title="Golanghttp库解析">Golanghttp库解析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T02:09:00.000Z" title="发表于 2025-02-13 10:09:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">源码剖析</a></span></div><div class="content">1 整体框架1.1 C-S架构http 协议下，交互框架是由客户端（Client）和服务端（Server）两个模块组成的 C-S 架构，两个部分正好对应为本文研究的两条主线. 1234567891011121314151617181920212223graph TD    A[Client] --&gt;|HTTP Request| B[http.Client]    B --&gt;|Send Request| C[Transport]    C --&gt;|Dial| D[Network]    D --&gt;|Send to Server| E[Server]    E --&gt;|Handle Request| F[http.ServeMux]    F --&gt;|Call Handler| G[Handler Function]    G --&gt;|Generate Response| H[Response]    H --&gt;|Send Response| E    E --&gt;|Return Response| D    D...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">xhang</div><div class="author-info-description">徐航的个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx404%E9%97%AE%E9%A2%98/" title="无标题">无标题</a><time datetime="2025-02-17T06:11:50.000Z" title="发表于 2025-02-17 14:11:50">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" title="无标题">无标题</a><time datetime="2025-02-17T05:36:09.000Z" title="发表于 2025-02-17 13:36:09">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客">使用github actions自动发布hexo博客</a><time datetime="2025-02-17T02:21:26.000Z" title="发表于 2025-02-17 10:21:26">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" title="Golang整体复习Day07">Golang整体复习Day07</a><time datetime="2025-02-16T16:00:00.000Z" title="发表于 2025-02-17 00:00:00">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" title="Golang整体复习Day06">Golang整体复习Day06</a><time datetime="2025-02-15T16:00:00.000Z" title="发表于 2025-02-16 00:00:00">2025-02-16</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
-            <i class="fas fa-folder-open"></i>
-            <span>分类</span>
-            
-          </div>
-          <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Deploy/"><span class="card-category-list-name">Deploy</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Nacos/"><span class="card-category-list-name">Nacos</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/default/"><span class="card-category-list-name">default</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/kubernetes/"><span class="card-category-list-name">kubernetes</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">开发学习</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/"><span class="card-category-list-name">源码剖析</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/"><span class="card-category-list-name">知识梳理</span><span class="card-category-list-count">6</span></a></li>
-          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/nacos/" style="font-size: 1.23em; color: #999ea6">nacos</a> <a href="/tags/API/" style="font-size: 1.1em; color: #999">API</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 1.23em; color: #999ea6">部署</a> <a href="/tags/Github-Actions/" style="font-size: 1.1em; color: #999">Github Actions</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" style="font-size: 1.37em; color: #99a4b2">知识梳理</a> <a href="/tags/Nginx/" style="font-size: 1.23em; color: #999ea6">Nginx</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 1.1em; color: #999">运维</a> <a href="/tags/Nacos/" style="font-size: 1.1em; color: #999">Nacos</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/Golang/" style="font-size: 1.5em; color: #99a9bf">Golang</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BA%93/" style="font-size: 1.1em; color: #999">客户端库</a> <a href="/tags/etcd/" style="font-size: 1.1em; color: #999">etcd</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a></div></div><div class="card-widget card-archives">
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>归档</span>
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="An elegant Material-Design theme for Hexo"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
       
     </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9D%83%E9%99%90%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/" target="_self">
+          
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9D%83%E9%99%90%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/" target="_self">
+        <div>
+          OSS AccessKey 安全风险故障处理文档 故障现象客户接口直接返回 OSS 的 AccessKey ID 和 AccessKey Secret，导致：  文件列表泄露：攻击者可利用 Key 拉取所有文件列表。 文件内容泄露&#x2F;篡改：攻击者可下载敏感文件或覆盖&#x2F;删除现有文件。   原因分析 敏感信息暴露：AccessKey 明文传输导致泄露风险。 权限过大：提供的 Acce
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 14:31" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx404%E9%97%AE%E9%A2%98/" target="_self">
+          
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx404%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          记一次nginx404问题事故描述笔者所在公司使用的是nginx作为静态资源服务器，但是最近发现一个奇怪的问题，就是访问静态资源的时候，会出现404错误。 事故排查笔者在浏览器控制台发现，访问的资源路径是OSS给出的地址，但是oss对应的路径上并没有对应的资源。因此报404错误 解决方法：首先考虑把静态资源放到oss上去，但是由于服务是自动cicd的，所以无法这样处理，切可能会导致资源更新不及时的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 14:11" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" target="_self">
+          
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" target="_self">
+        <div>
+          记一次jenkins和gitlab故障1. 问题描述笔者所在公司主要的开发语言是java和go，使用gitlab作为代码管理工具，使用jenkins作为CI&#x2F;CD工具。公司封装了自己的运维平台，通过gitlab的webhook触发jenkins的构建和部署。然而之前的同事在测试环境做了一些gitlab的cicd配置，集成到ack集群中，导致项目部署的时候，jenkins构建的内容会被gi
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 13:36" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" target="_self">
+          使用github actions自动发布hexo博客
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" target="_self">
+        <div>
+          使用github actions自动发布hexo博客假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。 1. 设置密钥首先在本地生成密钥对 1ssh-keygen -t rsa -C &quot;your_email
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 10:21" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
   
-    <ul class="card-archive-list">
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Github-Actions/">#Github Actions</a>
+            
+              <a href="/tags/Hexo/">#Hexo</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" target="_self">
+          Golang整体复习Day07
+        </a>
+      </h2>
+
       
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2025/02/">
-            <span class="card-archive-list-date">
-              二月 2025
-            </span>
-            <span class="card-archive-list-count">23</span>
-          </a>
-        </li>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" target="_self">
+        <div>
+          区别于C&#x2F;C++中的指针，Go语言中的指针不能进行偏移和运算，是安全指针。 要搞明白Go语言中的指针需要先知道3个概念：指针地址、指针类型和指针取值。 Go语言中的指针任何程序数据载入内存后，在内存都有他们的地址，这就是指针。而为了保存一个数据在内存中的地址，我们就需要指针变量。 比如，“永远不要高估自己”这句话是我的座右铭，我想把它写入程序中，程序一启动这句话是要加载到内存（假设内存地
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 00:00" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" target="_self">
+          Golang整体复习Day06
+        </a>
+      </h2>
+
       
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2025/01/">
-            <span class="card-archive-list-date">
-              一月 2025
-            </span>
-            <span class="card-archive-list-count">1</span>
-          </a>
-        </li>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" target="_self">
+        <div>
+          函数是组织好的、可重复使用的、用于执行指定任务的代码块。本文介绍了Go语言中函数的相关内容。 函数Go语言中支持函数、匿名函数和闭包，并且函数在Go语言中属于“一等公民”。 函数定义Go语言中定义函数使用func关键字，具体格式如下： 123func 函数名(参数)(返回值)&#123;    函数体&#125;  其中：  函数名：由字母、数字、下划线组成。但函数名的第一个字母不能是数字。在同一
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-16 00:00" pubdate>
+              2025-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" target="_self">
+          Nginx 跨域配置
+        </a>
+      </h2>
+
       
-    </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">24</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-17T06:27:26.451Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By xhang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" target="_self">
+        <div>
+          在 Nginx 中实现跨域（CORS，Cross-Origin Resource Sharing）是通过配置 HTTP 响应头来允许浏览器跨域访问资源。以下是详细的配置方法和解析：  1. 跨域问题的背景 跨域 是指浏览器从一个域名（源）向另一个域名发起请求时，由于浏览器的同源策略（Same-Origin Policy），请求会被阻止。 CORS 是一种机制，允许服务器声明哪些源可以访问其资源。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 16:24" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">#知识梳理</a>
+            
+              <a href="/tags/Nginx/">#Nginx</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/nginx%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" target="_self">
+          Nginx 超时问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nginx%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          背景概述最近计划着重分析一下线上各api的HTTP响应耗时情况，检查是否有接口平均耗时、99分位耗时等相关指标过大的情况，了解到nginx统计请求耗时有四个指标：request_time、upstream_response_time、upstream_connect_time与upstream_header_time，在查找资料的过程中，发现无论是nginx官方文档还是热心网友们的分享，都并没有让
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 16:14" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">#知识梳理</a>
+            
+              <a href="/tags/Nginx/">#Nginx</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/etcd-tools/" target="_self">
+          etcd 工具和客户端库
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/etcd-tools/" target="_self">
+        <div>
+          以下是关于 etcd 工具和客户端库的汇总翻译自：https://etcd.io/docs/v3.5/integrations/ 库和工具etcd 工具和客户端库列表。请注意，以下提到的第三方库和工具（不托管在 https://github.com/etcd-io 上）没有经过 etcd 团队的测试和维护。在使用它们之前，建议用户先阅读和调查这些库和工具。 工具 etcdctl - etcd 的命
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 15:14" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/etcd/">#etcd</a>
+            
+              <a href="/tags/%E5%B7%A5%E5%85%B7/">#工具</a>
+            
+              <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BA%93/">#客户端库</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" target="_self">
+          etcdctl命令整理
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/2025-02-13-etcdctl%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" target="_self">
+        <div>
+          etcdctl 是 etcd 的命令行客户端工具，用于与 etcd 集群进行交互。下面是 etcdctl 的一些常用选项和命令，帮助你进行数据存取和集群管理等操作。 常用选项在执行任何 etcdctl 命令时，你通常需要指定以下选项来配置连接参数：  --endpoints=[]：指定 etcd 集群的一个或多个端点地址，通常是 http://ip:port 格式。 --cacert=&quot;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 10:09" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/kubernetes/" class="category-chain-item">kubernetes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">#知识梳理</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

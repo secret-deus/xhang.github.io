@@ -1,179 +1,965 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>xhang's blog</title><meta name="author" content="xhang"><meta name="copyright" content="xhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="徐航的个人博客">
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="徐航的个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="xhang&#39;s blog">
 <meta property="og:url" content="https://blog.740777352.xyz/page/2/index.html">
 <meta property="og:site_name" content="xhang&#39;s blog">
 <meta property="og:description" content="徐航的个人博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.740777352.xyz/img/butterfly-icon.png">
 <meta property="article:author" content="xhang">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.740777352.xyz/img/butterfly-icon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.740777352.xyz/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
+<meta name="twitter:card" content="summary_large_image">
   
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
+  
+  
+  <title>xhang&#39;s blog</title>
 
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
-      const theme = saveToLocal.get('theme')
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
     
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
         
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
   
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'xhang\'s blog',
-  isHighlightShrink: false,
-  isToc: false,
-  pageType: 'home'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/fluid.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">xhang's blog</span></a></span><div id="menus"></div></nav><div id="site-info"><h1 id="site-title">xhang's blog</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/2025-02-13-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day04/" title="Golang整体复习Day04">Golang整体复习Day04</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-13T01:30:00.000Z" title="发表于 2025-02-13 09:30:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/">开发学习</a></span></div><div class="content">Array(数组)数组是同一种数据类型元素的集合。 在Go语言中，数组从声明时就确定，使用时可以修改数组成员，但是数组大小不可变化。 基本语法： 12// 定义一个长度为3元素类型为int的数组avar a [3]int  数组定义：1var 数组变量名 [元素数量]T  比如：var a [5]int， 数组的长度必须是常量，并且长度是数组类型的一部分。一旦定义，长度不能变。 [5]int和[10]int是不同的类型。 123var a [3]intvar b [4]inta = b //不可以这样做，因为此时a和b是不同的类型  数组可以通过下标进行访问，下标是从0开始，最后一个元素下标是：len-1，访问越界（下标在合法范围之外），则触发访问越界，会panic。 数组的初始化数组的初始化也有很多方式。 方法一初始化数组时可以使用初始化列表来设置数组元素的值。 12345678func main() &#123;	var testArray [3]int                        //数组会初始化为int类型的零值	var numArray =...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day05/" title="Golang整体复习Day05">Golang整体复习Day05</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T16:00:00.000Z" title="发表于 2025-02-13 00:00:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">Go语言中提供的映射关系容器为map，其内部使用散列表（hash）实现。 mapmap是一种无序的基于key-value的数据结构，Go语言中的map是引用类型，必须初始化才能使用。 map定义Go语言中 map的定义语法如下： 1map[KeyType]ValueType  其中，  KeyType:表示键的类型。 ValueType:表示键对应的值的类型。  map类型的变量默认初始值为nil，需要使用make()函数来分配内存。语法为： 1make(map[KeyType]ValueType, [cap])  其中cap表示map的容量，该参数虽然不是必须的，但是我们应该在初始化map的时候就为其指定一个合适的容量。 map基本使用map中的数据都是成对出现的，map的基本使用示例代码如下： 12345678func main() &#123;	scoreMap := make(map[string]int, 8)	scoreMap[&quot;张三&quot;] = 90	scoreMap[&quot;小明&quot;] =...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" title="nacos配置变更">nacos配置变更</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T16:00:00.000Z" title="发表于 2025-02-13 00:00:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/nacos/" title="nacos系统参数介绍">nacos系统参数介绍</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T16:00:00.000Z" title="发表于 2025-02-13 00:00:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">知识梳理</a></span></div><div class="content">Nacos 系统参数介绍1. Nacos Server对于Server端来说，一般是设置在&#123;nacos.home&#125;/conf/application.properties里，如果参数名后标注了(-D)的，则表示是 JVM 的参数，需要在&#123;nacos.home&#125;/bin/startup.sh里进行相应的设置。例如像设置 nacos.home 的值，可以在&#123;nacos.home&#125;/bin/startup.sh进行如下设置： 1JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -Dnacos.home=$&#123;BASE_DIR&#125;&quot;  若没有标注(-D)的参数，则同时可以在&#123;nacos.home&#125;/conf/application.properties里和JVM参数中配置，如果同时配置了JVM参数和&#123;nacos.home&#125;/conf/application.properties，那么JVM参数的优先级更高。 1.1. 全局参数1.1.1....</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/13/nacos%E8%BF%90%E7%BB%B4api/" title="Nacos运维API">Nacos运维API</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T16:00:00.000Z" title="发表于 2025-02-13 00:00:00">2025-02-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Nacos/">Nacos</a></span></div><div class="content">Nacos默认搭载了一整套专为管理控制台和运维人员设计的运维API，赋予运维专家更多的配置权限、更广阔的数据检索能力等。这些API为Nacos的运维团队提供了方便，使他们能够高效地处理故障、排查问题，以确保系统的稳定运行。 1 . Nacos Core 运维 API1.1. 获取当前节点连接接口描述通过该接口，可以获取连接到当前Nacos Server节点中的gRPC连接详情。 请求方式GET 请求URL/nacos/v2/core/loader/current 请求参数无 返回数据   参数名 参数类型 描述    ${connectionId} jsonString 每条gRPC连接的连接id   ${connectionId}.abilityTable jsonString 该gRPC连接（即客户端）支持的能力列表   ${connectionId}.metaInfo.clientIp String 该gRPC连接的来源IP   ${connectionId}.metaInfo.localPort int 该Nacos...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day03/" title="Golang整体复习Day03">Golang整体复习Day03</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T07:17:00.000Z" title="发表于 2025-02-12 15:17:00">2025-02-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/">开发学习</a></span></div><div class="content">流程控制if else(分支结构)if条件判断基本写法Go语言中if条件判断的格式如下： 1234567if 表达式1 &#123;    分支1&#125; else if 表达式2 &#123;    分支2&#125; else&#123;    分支3&#125;  当表达式1的结果为true时，执行分支1，否则判断表达式2，如果满足则执行分支2，都不满足时，则执行分支3。 if判断中的else if和else都是可选的，可以根据实际需要进行选择。 Go语言规定与if匹配的左括号&#123;必须与if和表达式放在同一行，&#123;放在其他位置会触发编译错误。 同理，与else匹配的&#123;也必须与else写在同一行，else也必须与上一个if或else if右边的大括号在同一行。 举个例子： 12345678910func ifDemo1() &#123;	score := 65	if score &gt;= 90 &#123;		fmt.Println(&quot;A&quot;)	&#125; else if score &gt; 75...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day02/" title="Golang整体复习Day02">Golang整体复习Day02</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-12T01:55:00.000Z" title="发表于 2025-02-12 09:55:00">2025-02-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/">开发学习</a></span></div><div class="content">标识符与关键字标识符在编程语言中标识符就是程序员定义的具有特殊意义的词，比如变量名、常量名、函数名等等。 Go语言中标识符由字母数字和_(下划线）组成，并且只能以字母和_开头。 举几个例子：abc, _, _123, a123。 关键字关键字是指编程语言中预先定义好的具有特殊含义的标识符。 关键字和保留字都不建议用作变量名。 Go语言中有25个关键字： 12345break        default      func         interface    selectcase         defer        go           map          structchan         else         goto         package      switchconst        fallthrough  if           range        typecontinue     for          import       return      ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/11/2025-02-11-cloudfare%E9%87%8D%E5%AE%9A%E5%90%91%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" title="cloudfare重定向问题处理">cloudfare重定向问题处理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-11T14:33:00.000Z" title="发表于 2025-02-11 22:33:00">2025-02-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Deploy/">Deploy</a></span></div><div class="content">问题今天给GitHub Page套了层Cloudflare，结果访问时浏览器报“重定向次数过多”错误。 原因通过百度查询，发现是HTTPS的问题。GitHub Page中打开了“Enforce HTTPS ”，这会让所有HTTP的链接重定向到HTTPS中。而Cloudflare回源使用的是HTTP链接，于是就出现了一遍遍的重定向，最终次数过多浏览器报错。 解决方案将Cloudflare中的SSL&#x2F;TLS 加密模式由“关闭”或“灵活”改为“完全”即可。 </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/11/2025-02-11-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day01/" title="Golang整体复习Day01">Golang整体复习Day01</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-11T05:45:00.000Z" title="发表于 2025-02-11 13:45:00">2025-02-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/">开发学习</a></span></div><div class="content">abstract由于笔者工作与开发关系不大，因此已有许久没有复习过golang的语法和用例，最近在对运维平台的梳理过程中，想要用golang来做一下后端的实现，奈何基础知识基本上忘光了，连ai写都写不下去，故此开始复习一下相关内容，顺便整理一下之前杂乱的笔记。   0.从零开始搭建Go环境0.1 安装Go下载下载地址Go官网下载地址：https://golang.org/dl/ Go官方镜像站（推荐）：https://golang.google.cn/dl/ 版本的选择Windows平台和Mac平台推荐下载可执行文件版，Linux平台下载压缩文件版。 笔者使用的是macos平台，因此下载的是go1.23.6.darwin-amd64.pkg这个版本。  安装双击下载的pkg文件，按照提示安装即可。 配置环境变量笔者使用的是macos平台，因此需要配置环境变量。 在终端输入以下命令： 12echo &#x27;export PATH=&quot;$PATH:/usr/local/go/bin&quot;&#x27; &gt;&gt; ~/.zshrcsource...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/10/2025-02-10-%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E5%8A%9F%E8%83%BD%E6%A2%B3%E7%90%86/" title="运维平台功能梳理">运维平台功能梳理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-10T05:45:00.000Z" title="发表于 2025-02-10 13:45:00">2025-02-10</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/">开发学习</a></span></div><div class="content">abstract要构建一个运维平台，接入阿里云平台并实现资产管理、用户管理、告警管理、日志管理、数据库监控等功能，需要从需求分析、架构设计和技术栈选择三个方面进行梳理。以下是详细的整理。 需求分析1.资产管理 功能需求： 自动同步阿里云资源（如ECS、RDS、SLB等）到运维平台数据库； 资源分类和标签管理（主要是针对不同业务的不同需求进行命名以及标签管理） 资源生命周期管理（创建资源、修改资源配置、删除资源） 资源使用情况和报表（形成大盘）   非功能需求 数据实时性：资源状态需要实时更新； 可扩展性：支持未来接入其他云平台（如AWS、腾讯云等）    2.用户管理 功能需求： 用户角色和权限管理（包括管理员、运维人员、普通用户） 基于角色的访问控制 用户操作日志审计   非功能需求： 安全性：支持多因素认证（MFA）和密码策略。 可扩展性：支持 LDAP 或 OAuth 集成。    3. 告警管理 功能需求： 对接阿里云监控服务（如...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">xhang</div><div class="author-info-description">徐航的个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx404%E9%97%AE%E9%A2%98/" title="无标题">无标题</a><time datetime="2025-02-17T06:11:50.000Z" title="发表于 2025-02-17 14:11:50">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" title="无标题">无标题</a><time datetime="2025-02-17T05:36:09.000Z" title="发表于 2025-02-17 13:36:09">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客">使用github actions自动发布hexo博客</a><time datetime="2025-02-17T02:21:26.000Z" title="发表于 2025-02-17 10:21:26">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" title="Golang整体复习Day07">Golang整体复习Day07</a><time datetime="2025-02-16T16:00:00.000Z" title="发表于 2025-02-17 00:00:00">2025-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" title="Golang整体复习Day06">Golang整体复习Day06</a><time datetime="2025-02-15T16:00:00.000Z" title="发表于 2025-02-16 00:00:00">2025-02-16</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
-            <i class="fas fa-folder-open"></i>
-            <span>分类</span>
-            
-          </div>
-          <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Deploy/"><span class="card-category-list-name">Deploy</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Nacos/"><span class="card-category-list-name">Nacos</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/default/"><span class="card-category-list-name">default</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/kubernetes/"><span class="card-category-list-name">kubernetes</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">开发学习</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/"><span class="card-category-list-name">源码剖析</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/"><span class="card-category-list-name">知识梳理</span><span class="card-category-list-count">6</span></a></li>
-          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/nacos/" style="font-size: 1.23em; color: #999ea6">nacos</a> <a href="/tags/API/" style="font-size: 1.1em; color: #999">API</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 1.23em; color: #999ea6">部署</a> <a href="/tags/Github-Actions/" style="font-size: 1.1em; color: #999">Github Actions</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" style="font-size: 1.37em; color: #99a4b2">知识梳理</a> <a href="/tags/Nginx/" style="font-size: 1.23em; color: #999ea6">Nginx</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 1.1em; color: #999">运维</a> <a href="/tags/Nacos/" style="font-size: 1.1em; color: #999">Nacos</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/Golang/" style="font-size: 1.5em; color: #99a9bf">Golang</a> <a href="/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BA%93/" style="font-size: 1.1em; color: #999">客户端库</a> <a href="/tags/etcd/" style="font-size: 1.1em; color: #999">etcd</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a></div></div><div class="card-widget card-archives">
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>归档</span>
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="An elegant Material-Design theme for Hexo"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
       
     </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/2025-02-13-golanghttp%E5%BA%93%E8%A7%A3%E6%9E%90/" target="_self">
+          Golanghttp库解析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/2025-02-13-golanghttp%E5%BA%93%E8%A7%A3%E6%9E%90/" target="_self">
+        <div>
+          1 整体框架1.1 C-S架构http 协议下，交互框架是由客户端（Client）和服务端（Server）两个模块组成的 C-S 架构，两个部分正好对应为本文研究的两条主线. 1234567891011121314151617181920212223graph TD    A[Client] --&gt;|HTTP Request| B[http.Client]    B --&gt;|Send
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 10:09" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
   
-    <ul class="card-archive-list">
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" class="category-chain-item">源码剖析</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/2025-02-13-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day04/" target="_self">
+          Golang整体复习Day04
+        </a>
+      </h2>
+
       
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2025/02/">
-            <span class="card-archive-list-date">
-              二月 2025
-            </span>
-            <span class="card-archive-list-count">23</span>
-          </a>
-        </li>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/2025-02-13-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day04/" target="_self">
+        <div>
+          Array(数组)数组是同一种数据类型元素的集合。 在Go语言中，数组从声明时就确定，使用时可以修改数组成员，但是数组大小不可变化。 基本语法： 12// 定义一个长度为3元素类型为int的数组avar a [3]int  数组定义：1var 数组变量名 [元素数量]T  比如：var a [5]int， 数组的长度必须是常量，并且长度是数组类型的一部分。一旦定义，长度不能变。 [5]int和[1
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 09:30" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/" class="category-chain-item">开发学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day05/" target="_self">
+          Golang整体复习Day05
+        </a>
+      </h2>
+
       
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2025/01/">
-            <span class="card-archive-list-date">
-              一月 2025
-            </span>
-            <span class="card-archive-list-count">1</span>
-          </a>
-        </li>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day05/" target="_self">
+        <div>
+          Go语言中提供的映射关系容器为map，其内部使用散列表（hash）实现。 mapmap是一种无序的基于key-value的数据结构，Go语言中的map是引用类型，必须初始化才能使用。 map定义Go语言中 map的定义语法如下： 1map[KeyType]ValueType  其中，  KeyType:表示键的类型。 ValueType:表示键对应的值的类型。  map类型的变量默认初始值为nil
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 00:00" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" target="_self">
+          nacos配置变更
+        </a>
+      </h2>
+
       
-    </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">24</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-17T06:27:26.451Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By xhang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" target="_self">
+        <div>
+          配置变更插件社区中一直以来都希望Nacos配置中心能在配置发生变更时，通知一些特定系统，用于发送记录、警告等审计功能。在2.3.0版本前，只能通过模拟Nacos客户端订阅配置的方式，对核心配置的变更操作进行订阅，在收到变更通知后，进行发送记录、警告等功能的执行。 这种实现方式有几个比较大的问题，第一是监听的配置需要逐个添加，难以对所有配置变更进行获取；第二是只能在配置变更后执行功能逻辑，无法做到前
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 00:00" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/nacos/">#nacos</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/nacos/" target="_self">
+          nacos系统参数介绍
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nacos/" target="_self">
+        <div>
+          Nacos 系统参数介绍1. Nacos Server对于Server端来说，一般是设置在&#123;nacos.home&#125;/conf/application.properties里，如果参数名后标注了(-D)的，则表示是 JVM 的参数，需要在&#123;nacos.home&#125;/bin/startup.sh里进行相应的设置。例如像设置 nacos.home 的值，可以在&#1
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 00:00" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/nacos/">#nacos</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/13/nacos%E8%BF%90%E7%BB%B4api/" target="_self">
+          Nacos运维API
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nacos%E8%BF%90%E7%BB%B4api/" target="_self">
+        <div>
+          Nacos默认搭载了一整套专为管理控制台和运维人员设计的运维API，赋予运维专家更多的配置权限、更广阔的数据检索能力等。这些API为Nacos的运维团队提供了方便，使他们能够高效地处理故障、排查问题，以确保系统的稳定运行。 1 . Nacos Core 运维 API1.1. 获取当前节点连接接口描述通过该接口，可以获取连接到当前Nacos Server节点中的gRPC连接详情。 请求方式GET 请
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-13 00:00" pubdate>
+              2025-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Nacos/" class="category-chain-item">Nacos</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Nacos/">#Nacos</a>
+            
+              <a href="/tags/%E8%BF%90%E7%BB%B4/">#运维</a>
+            
+              <a href="/tags/API/">#API</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day03/" target="_self">
+          Golang整体复习Day03
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day03/" target="_self">
+        <div>
+          流程控制if else(分支结构)if条件判断基本写法Go语言中if条件判断的格式如下： 1234567if 表达式1 &#123;    分支1&#125; else if 表达式2 &#123;    分支2&#125; else&#123;    分支3&#125;  当表达式1的结果为true时，执行分支1，否则判断表达式2，如果满足则执行分支2，都不满足时，则执行分支3。 if判断中的e
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-12 15:17" pubdate>
+              2025-02-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/" class="category-chain-item">开发学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day02/" target="_self">
+          Golang整体复习Day02
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/12/2025-02-12-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day02/" target="_self">
+        <div>
+          标识符与关键字标识符在编程语言中标识符就是程序员定义的具有特殊意义的词，比如变量名、常量名、函数名等等。 Go语言中标识符由字母数字和_(下划线）组成，并且只能以字母和_开头。 举几个例子：abc, _, _123, a123。 关键字关键字是指编程语言中预先定义好的具有特殊含义的标识符。 关键字和保留字都不建议用作变量名。 Go语言中有25个关键字： 12345break        defa
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-12 09:55" pubdate>
+              2025-02-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/" class="category-chain-item">开发学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/11/2025-02-11-cloudfare%E9%87%8D%E5%AE%9A%E5%90%91%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" target="_self">
+          cloudfare重定向问题处理
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/11/2025-02-11-cloudfare%E9%87%8D%E5%AE%9A%E5%90%91%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" target="_self">
+        <div>
+          问题今天给GitHub Page套了层Cloudflare，结果访问时浏览器报“重定向次数过多”错误。 原因通过百度查询，发现是HTTPS的问题。GitHub Page中打开了“Enforce HTTPS ”，这会让所有HTTP的链接重定向到HTTPS中。而Cloudflare回源使用的是HTTP链接，于是就出现了一遍遍的重定向，最终次数过多浏览器报错。 解决方案将Cloudflare中的SSL&
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-11 22:33" pubdate>
+              2025-02-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Deploy/" class="category-chain-item">Deploy</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%83%A8%E7%BD%B2/">#部署</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/11/2025-02-11-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day01/" target="_self">
+          Golang整体复习Day01
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/11/2025-02-11-Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day01/" target="_self">
+        <div>
+          abstract由于笔者工作与开发关系不大，因此已有许久没有复习过golang的语法和用例，最近在对运维平台的梳理过程中，想要用golang来做一下后端的实现，奈何基础知识基本上忘光了，连ai写都写不下去，故此开始复习一下相关内容，顺便整理一下之前杂乱的笔记。   0.从零开始搭建Go环境0.1 安装Go下载下载地址Go官网下载地址：https://golang.org/dl/ Go官方镜像站（推
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-11 13:45" pubdate>
+              2025-02-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0/" class="category-chain-item">开发学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
