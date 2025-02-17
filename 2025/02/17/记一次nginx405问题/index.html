@@ -19,23 +19,23 @@
   <meta name="author" content="xhang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="使用github actions自动发布hexo博客假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。 1. 设置密钥首先在本地生成密钥对 1ssh-keygen -t rsa -C &quot;your_email">
+    <meta name="description" content="问题描述公司服务突然出现405问题，导致服务无法正常访问，而且日志也中断了。研发人员尝试重启服务，发现重启不了，笔者登陆服务器查看资源占用情况正常，服务运行正常。同事提到405可能是waf拦截了，安全检查后发现确实拦截了。 问题排查由于公司服务是跨云部署，一部分在阿里云，一部分在天翼云，阿里云出口ip就是nat网关的ip，因此在流量增大时，会导致nat出口ip被waf加入黑名单，导致服务不可用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用github actions自动发布hexo博客">
-<meta property="og:url" content="https://blog.740777352.xyz/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:title" content="记一次nginx405问题">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="xhang&#39;s blog">
-<meta property="og:description" content="使用github actions自动发布hexo博客假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。 1. 设置密钥首先在本地生成密钥对 1ssh-keygen -t rsa -C &quot;your_email">
+<meta property="og:description" content="问题描述公司服务突然出现405问题，导致服务无法正常访问，而且日志也中断了。研发人员尝试重启服务，发现重启不了，笔者登陆服务器查看资源占用情况正常，服务运行正常。同事提到405可能是waf拦截了，安全检查后发现确实拦截了。 问题排查由于公司服务是跨云部署，一部分在阿里云，一部分在天翼云，阿里云出口ip就是nat网关的ip，因此在流量增大时，会导致nat出口ip被waf加入黑名单，导致服务不可用。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-17T02:21:26.000Z">
-<meta property="article:modified_time" content="2025-02-17T02:34:11.000Z">
+<meta property="article:published_time" content="2025-02-17T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-17T09:35:19.318Z">
 <meta property="article:author" content="xhang">
-<meta property="article:tag" content="Github Actions">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="405">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>使用github actions自动发布hexo博客 - xhang&#39;s blog</title>
+  <title>记一次nginx405问题 - xhang&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用github actions自动发布hexo博客"></span>
+            <span id="subtitle" data-typed-text="记一次nginx405问题"></span>
           
         </div>
 
@@ -212,7 +212,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-17 10:21" pubdate>
+        <time datetime="2025-02-17 10:00" pubdate>
           2025年2月17日 上午
         </time>
       </span>
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          389 字
+          377 字
         
       </span>
     
@@ -272,20 +272,38 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">使用github actions自动发布hexo博客</h1>
+            <h1 id="seo-header">记一次nginx405问题</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="使用github-actions自动发布hexo博客"><a href="#使用github-actions自动发布hexo博客" class="headerlink" title="使用github actions自动发布hexo博客"></a>使用github actions自动发布hexo博客</h1><p>假设我们有两个 Github 仓库，分别用于存放博客源代码和博客静态资源（存放博客静态资源的仓库名字通常为 usrname.github.io）。存放博客源代码的仓库下文称 src 仓库，存放博客静态资源的仓库下文称为 prd 仓库。</p>
-<h2 id="1-设置密钥"><a href="#1-设置密钥" class="headerlink" title="1. 设置密钥"></a>1. 设置密钥</h2><p>首先在本地生成密钥对</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>在 src 仓库中创建一个名为 <code>id_rsa</code> 的密钥对，并将其添加到 Github 仓库的 <code>Settings</code> -&gt; <code>Secrets</code> -&gt; <code>New repository secret</code> 中，命名为 <code>HEXO_DEPLOY_PRI</code>。</p>
-<p>接着设置 prd 仓库的 <code>Settings</code> -&gt; <code>Deploy keys</code> -&gt; <code>Add deploy key</code> 中，命名为 <code>HEXO_DEPLOY_PUB</code>，并勾选 <code>Allow write access</code>。</p>
-<h2 id="2-设置-Github-Actions"><a href="#2-设置-Github-Actions" class="headerlink" title="2. 设置 Github Actions"></a>2. 设置 Github Actions</h2><p>在 src 仓库中创建一个名为 <code>.github/workflows</code> 的文件夹，并在其中创建一个名为 <code>deploy.yml</code> 的文件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">name: Deploy hexo blog</span><br><span class="line"></span><br><span class="line">on:</span><br><span class="line">  push:</span><br><span class="line">    branches:</span><br><span class="line">    - hexo</span><br><span class="line"></span><br><span class="line"><span class="built_in">env</span>:</span><br><span class="line">  GIT_USER: starrynightzyq[bot]</span><br><span class="line">  GIT_EMAIL: starrynightzyq[bot]@gmail.com</span><br><span class="line"></span><br><span class="line"><span class="built_in">jobs</span>:</span><br><span class="line">  build:</span><br><span class="line">    name: Build with node <span class="variable">$&#123;&#123; matrix.node-version &#125;</span>&#125; on <span class="variable">$&#123;&#123; matrix.os &#125;</span>&#125;</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    <span class="keyword">if</span>: github.event.repository.owner.id == github.event.sender.id</span><br><span class="line"></span><br><span class="line">    strategy:</span><br><span class="line">      matrix:</span><br><span class="line">        os: [ubuntu-latest]</span><br><span class="line">        node-version: [16.x]</span><br><span class="line"></span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout</span><br><span class="line">        uses: actions/checkout@v4</span><br><span class="line">      - name: Use Node.js <span class="variable">$&#123;&#123; matrix.node-version &#125;</span>&#125;</span><br><span class="line">        uses: actions/setup-node@v4</span><br><span class="line">        with:</span><br><span class="line">          node-version: <span class="variable">$&#123;&#123; matrix.node-version &#125;</span>&#125;</span><br><span class="line">      - name: Install SSH key</span><br><span class="line">        uses: shimataro/ssh-key-action@v2</span><br><span class="line">        with:</span><br><span class="line">          key: <span class="variable">$&#123;&#123; secrets.HEXO_DEPLOY_PRI &#125;</span>&#125;</span><br><span class="line">          name: id_rsa</span><br><span class="line">          known_hosts: <span class="string">&#x27;github.com&#x27;</span></span><br><span class="line">          if_key_exists: replace</span><br><span class="line">      - name: Configuration environment</span><br><span class="line">        run: |</span><br><span class="line">          <span class="built_in">sudo</span> timedatectl set-timezone <span class="string">&quot;Asia/Shanghai&quot;</span></span><br><span class="line">          git config --global user.name <span class="variable">$GIT_USER</span></span><br><span class="line">          git config --global user.email <span class="variable">$GIT_EMAIL</span></span><br><span class="line">      - name: Setup pandoc</span><br><span class="line">        uses: nikeee/setup-pandoc@v1</span><br><span class="line">      - name: Install dependencies</span><br><span class="line">        run: |</span><br><span class="line">          npm install</span><br><span class="line">      - name: Deploy hexo</span><br><span class="line">        run: |</span><br><span class="line">          npm run publish</span><br></pre></td></tr></table></figure>
-<p>配置好之后，我们在 src 仓库的 source&#x2F;_posts&#x2F; 目录下创建一个 Markdown 文件，编写博客内容，然后提交代码，Github Actions 就会自动构建博客，并将博客部署到 prd 仓库。</p>
+                <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>公司服务突然出现405问题，导致服务无法正常访问，而且日志也中断了。研发人员尝试重启服务，发现重启不了，笔者登陆服务器查看资源占用情况正常，服务运行正常。<br>同事提到405可能是waf拦截了，安全检查后发现确实拦截了。</p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><p>由于公司服务是跨云部署，一部分在阿里云，一部分在天翼云，阿里云出口ip就是nat网关的ip，因此在流量增大时，会导致nat出口ip被waf加入黑名单，导致服务不可用。</p>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>暂时将nat出口ip加入白名单</p>
+<h2 id="问题总结"><a href="#问题总结" class="headerlink" title="问题总结"></a>问题总结</h2><ol>
+<li><p>跨云部署架构中，需要特别注意各个云服务商之间的网络通信问题，尤其是NAT网关的出口IP管理。</p>
+</li>
+<li><p>WAF（Web应用防火墙）在保护服务安全的同时，也可能因为误判导致正常业务中断：</p>
+<ul>
+<li>当流量突增时，容易触发WAF的防护规则</li>
+<li>NAT网关出口IP被误判为攻击源</li>
+<li>405错误通常表示请求方法不被允许</li>
+</ul>
+</li>
+<li><p>临时解决方案：</p>
+<ul>
+<li>将NAT出口IP加入WAF白名单</li>
+</ul>
+</li>
+<li><p>长期优化建议：</p>
+<ul>
+<li>评估是否需要调整WAF的防护规则</li>
+<li>考虑使用专线或VPN等更稳定的跨云连接方案</li>
+<li>建立完善的监控告警机制，及时发现类似问题</li>
+<li>做好NAT网关出口IP的变更管理</li>
+</ul>
+</li>
+</ol>
 
                 
               </div>
@@ -304,7 +322,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  <a href="/categories/%E6%95%85%E9%9A%9C%E6%A2%B3%E7%90%86/" class="category-chain-item">故障梳理</a>
   
   
 
@@ -319,9 +337,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Github-Actions/" class="print-no-link">#Github Actions</a>
+        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
       
-        <a href="/tags/Hexo/" class="print-no-link">#Hexo</a>
+        <a href="/tags/405/" class="print-no-link">#405</a>
       
     </div>
   
@@ -333,8 +351,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>使用github actions自动发布hexo博客</div>
-      <div>https://blog.740777352.xyz/2025/02/17/使用github actions自动发布hexo博客/</div>
+      <div>记一次nginx405问题</div>
+      <div>https://blog.740777352.xyz/2025/02/17/记一次nginx405问题/</div>
     </div>
     <div class="license-meta">
       
@@ -378,9 +396,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1jenkins%E5%92%8Cgitlab%E6%95%85%E9%9A%9C/" title="记一次jenkins和gitlab故障">
+                      <a href="/2025/02/17/%E4%BD%BF%E7%94%A8github%20actions%E8%87%AA%E5%8A%A8%E5%8F%91%E5%B8%83hexo%E5%8D%9A%E5%AE%A2/" title="使用github actions自动发布hexo博客">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">记一次jenkins和gitlab故障</span>
+                        <span class="hidden-mobile">使用github actions自动发布hexo博客</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -388,8 +406,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/" title="记一次nginx405问题">
-                        <span class="hidden-mobile">记一次nginx405问题</span>
+                      <a href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" title="Golang整体复习Day07">
+                        <span class="hidden-mobile">Golang整体复习Day07</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

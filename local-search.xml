@@ -83,6 +83,33 @@
   
   
   <entry>
+    <title>记一次nginx405问题</title>
+    <link href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/"/>
+    <url>/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>公司服务突然出现405问题，导致服务无法正常访问，而且日志也中断了。研发人员尝试重启服务，发现重启不了，笔者登陆服务器查看资源占用情况正常，服务运行正常。<br>同事提到405可能是waf拦截了，安全检查后发现确实拦截了。</p><h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><p>由于公司服务是跨云部署，一部分在阿里云，一部分在天翼云，阿里云出口ip就是nat网关的ip，因此在流量增大时，会导致nat出口ip被waf加入黑名单，导致服务不可用。</p><h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>暂时将nat出口ip加入白名单</p><h2 id="问题总结"><a href="#问题总结" class="headerlink" title="问题总结"></a>问题总结</h2><ol><li><p>跨云部署架构中，需要特别注意各个云服务商之间的网络通信问题，尤其是NAT网关的出口IP管理。</p></li><li><p>WAF（Web应用防火墙）在保护服务安全的同时，也可能因为误判导致正常业务中断：</p><ul><li>当流量突增时，容易触发WAF的防护规则</li><li>NAT网关出口IP被误判为攻击源</li><li>405错误通常表示请求方法不被允许</li></ul></li><li><p>临时解决方案：</p><ul><li>将NAT出口IP加入WAF白名单</li></ul></li><li><p>长期优化建议：</p><ul><li>评估是否需要调整WAF的防护规则</li><li>考虑使用专线或VPN等更稳定的跨云连接方案</li><li>建立完善的监控告警机制，及时发现类似问题</li><li>做好NAT网关出口IP的变更管理</li></ul></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>故障梳理</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nginx</tag>
+      
+      <tag>405</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Golang整体复习Day07</title>
     <link href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/"/>
     <url>/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/</url>
