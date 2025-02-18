@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在 Kubernetes 中命名空间（Namespace）出现”卡住”问题时，通常表现为 无法删除、资源停留在 Terminating 状态 或 操作响应缓慢。以下是分步骤的解决方案及原理分析：  一、基本原则 优先尝试优雅删除：先避免直接操作 etcd； 检查依赖资源：残留资源或 Finalizers 通常是主因； 需集群管理权限：操作需 cluster-admin 权限。   二、核心解决方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s namespace卡住解决方案">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/18/k8s%20namespace%E5%8D%A1%E4%BD%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="在 Kubernetes 中命名空间（Namespace）出现”卡住”问题时，通常表现为 无法删除、资源停留在 Terminating 状态 或 操作响应缓慢。以下是分步骤的解决方案及原理分析：  一、基本原则 优先尝试优雅删除：先避免直接操作 etcd； 检查依赖资源：残留资源或 Finalizers 通常是主因； 需集群管理权限：操作需 cluster-admin 权限。   二、核心解决方案">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-18T09:50:00.000Z">
+<meta property="article:modified_time" content="2025-02-18T09:53:57.592Z">
+<meta property="article:author" content="xhang">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>k8s namespace卡住解决方案 - xhang&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="k8s namespace卡住解决方案"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-18 17:50" pubdate>
+          2025年2月18日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">k8s namespace卡住解决方案</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在 Kubernetes 中命名空间（Namespace）出现”卡住”问题时，通常表现为 <strong>无法删除、资源停留在 Terminating 状态</strong> 或 <strong>操作响应缓慢</strong>。以下是分步骤的解决方案及原理分析：</p>
+<hr>
+<h1 id="一、基本原则"><a href="#一、基本原则" class="headerlink" title="一、基本原则"></a>一、基本原则</h1><ol>
+<li><strong>优先尝试优雅删除</strong>：先避免直接操作 etcd；</li>
+<li><strong>检查依赖资源</strong>：残留资源或 Finalizers 通常是主因；</li>
+<li><strong>需集群管理权限</strong>：操作需 <code>cluster-admin</code> 权限。</li>
+</ol>
+<hr>
+<h1 id="二、核心解决方案及命令"><a href="#二、核心解决方案及命令" class="headerlink" title="二、核心解决方案及命令"></a>二、核心解决方案及命令</h1><h2 id="1-强制删除残留资源"><a href="#1-强制删除残留资源" class="headerlink" title="1. 强制删除残留资源"></a>1. 强制删除残留资源</h2><p>当使用 <code>kubectl delete</code> 无法清理时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 强制删除命名空间内所有资源（慎用）</span><br>kubectl delete all --all --grace-period=0 --force -n &lt;NAMESPACE&gt;<br><br><span class="hljs-comment"># 清理非标准资源（如 CRD）</span><br>kubectl api-resources --verbs=list --namespaced |\<br>  awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs -n 1 kubectl get -n &lt;NAMESPACE&gt; --show-kind --ignore-not-found<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-诊断-Finalizers-拦截问题"><a href="#2-诊断-Finalizers-拦截问题" class="headerlink" title="2. 诊断 Finalizers 拦截问题"></a>2. 诊断 Finalizers 拦截问题</h4><p>使用以下命令定位卡住的资源：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get &lt;RESOURCE_TYPE&gt; -n &lt;NAMESPACE&gt; -o json | jq <span class="hljs-string">&#x27;.items[] | select(.metadata.finalizers != null) | .metadata.name&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>手动移除 Finalizers：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get &lt;RESOURCE_TYPE&gt; &lt;RESOURCE_NAME&gt; -n &lt;NAMESPACEACE&gt; -o json |\<br>  jq <span class="hljs-string">&#x27;del(.metadata.finalizers)&#x27;</span> | kubectl replace --raw /api/v1/namespaces/&lt;NAMESPACE&gt;/&lt;RESOURCE_TYPE&gt;/&lt;RESOURCE_NAME&gt;/finalize -f -<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-特殊手段删除-Namespace"><a href="#3-特殊手段删除-Namespace" class="headerlink" title="3. 特殊手段删除 Namespace"></a>3. 特殊手段删除 Namespace</h2><p>当命名空间自身进入 Terminating 状态时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">NAMESPACE=your_namespace<br>kubectl get ns <span class="hljs-variable">$NAMESPACE</span> -o json &gt; tmp.json<br><span class="hljs-comment"># 打开 tmp.json，删除 `finalizers` 字段和 `spec` 部分</span><br>sed -i <span class="hljs-string">&#x27;/&quot;finalizers&quot;: \[/,/\]/d; /&quot;spec&quot;: &#123;/,/&#125;/d&#x27;</span> tmp.json<br><span class="hljs-comment"># 通过 API 强制更新</span><br>kubectl replace --raw <span class="hljs-string">&quot;/api/v1/namespaces/<span class="hljs-variable">$NAMESPACE</span>/finalize&quot;</span> -f tmp.json<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-检查控制器状态"><a href="#4-检查控制器状态" class="headerlink" title="4. 检查控制器状态"></a>4. 检查控制器状态</h2><p>若问题由控制器异常导致：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看控制器日志（通常在 kube-system）</span><br>kubectl logs -n kube-system kube-controller-manager-xxxx | grep -i namespace<br><span class="hljs-comment"># 临时重启控制器（仅极端状况）</span><br>kubectl delete pod -n kube-system kube-controller-manager-xxxx<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-修改etcd数据"><a href="#5-修改etcd数据" class="headerlink" title="5. 修改etcd数据"></a>5. 修改etcd数据</h2><p>通过 <strong>直接操作 etcd</strong> 删除 Kubernetes 命名空间是 <strong>高风险操作</strong>，<strong>仅在所有常规方法失效时</strong> 作为最后手段使用。以下是严格操作的步骤及要求：</p>
+<hr>
+<h3 id="一、前置条件"><a href="#一、前置条件" class="headerlink" title="一、前置条件"></a>一、前置条件</h3><ul>
+<li><strong>必备工具</strong>：<ul>
+<li><code>etcdctl</code> 客户端安装，版本与集群 etcd 匹配（通常要求 v3+）</li>
+<li>获取 etcd 证书：ca.crt、client.crt、client.key</li>
+</ul>
+</li>
+<li><strong>权限要求</strong>：需直接访问 etcd 节点的权限（非 kubectl 操作权限）</li>
+</ul>
+<hr>
+<h3 id="二、操作步骤"><a href="#二、操作步骤" class="headerlink" title="二、操作步骤"></a>二、操作步骤</h3><h4 id="1-备份-etcd"><a href="#1-备份-etcd" class="headerlink" title="1. 备份 etcd"></a>1. 备份 etcd</h4><p><strong>操作前必须生成快照</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">ETCDCTL_API=3 etcdctl --endpoints=https://[ETCD_IP]:2379 \<br>  --cacert=/etc/kubernetes/pki/etcd/ca.crt \<br>  --cert=/etc/kubernetes/pki/etcd/server.crt \<br>  --key=/etc/kubernetes/pki/etcd/server.key \<br>  snapshot save /path/to/backup.db<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-定位命名空间的-etcd-Key-路径"><a href="#2-定位命名空间的-etcd-Key-路径" class="headerlink" title="2. 定位命名空间的 etcd Key 路径"></a>2. 定位命名空间的 etcd Key 路径</h4><p>Kubernetes 命名空间在 etcd 中的存储路径为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ETCD_KEY=<span class="hljs-string">&quot;/registry/namespaces/[NAMESPACE_NAME]&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-删除命名空间条目"><a href="#3-删除命名空间条目" class="headerlink" title="3. 删除命名空间条目"></a>3. 删除命名空间条目</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">ETCDCTL_API=3 etcdctl --endpoints=https://[ETCD_IP]:2379 \<br>  --cacert=/etc/kubernetes/pki/etcd/ca.crt \<br>  --cert=/etc/kubernetes/pki/etcd/server.crt \<br>  --key=/etc/kubernetes/pki/etcd/server.key \<br>  del <span class="hljs-string">&quot;<span class="hljs-variable">$ETCD_KEY</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>删除结果判断</strong>：</p>
+<ul>
+<li>输出 <code>1</code>：成功删除一个键</li>
+<li>输出 <code>0</code>：未找到该键（需确认名称拼写）</li>
+</ul>
+<hr>
+<h3 id="三、配套清理操作"><a href="#三、配套清理操作" class="headerlink" title="三、配套清理操作"></a>三、配套清理操作</h3><h4 id="1-清理残留资源"><a href="#1-清理残留资源" class="headerlink" title="1. 清理残留资源"></a>1. 清理残留资源</h4><p>命名空间删除后，<strong>其下资源可能仍存在于其他路径</strong>，须全集群扫描清理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查找该命名空间下所有资源（示例）</span><br>etcdctl get / --prefix --keys-only | grep <span class="hljs-string">&quot;/registry/[^/]*/[NAMESPACE_NAME]/&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-重启-Kubernetes-控制器-选择性执行"><a href="#2-重启-Kubernetes-控制器-选择性执行" class="headerlink" title="2. 重启 Kubernetes 控制器 (选择性执行)"></a>2. 重启 Kubernetes 控制器 (选择性执行)</h4><p>部分残余资源可能被 controller-manager 重建：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 强制驱逐控制器 Pod（触发重建）</span><br>kubectl delete pod -n kube-system kube-controller-manager-xxxxx<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="四、风险及验证"><a href="#四、风险及验证" class="headerlink" title="四、风险及验证"></a>四、风险及验证</h3><h4 id="关键风险"><a href="#关键风险" class="headerlink" title="关键风险"></a>关键风险</h4><table>
+<thead>
+<tr>
+<th>风险点</th>
+<th>后果</th>
+<th>规避措施</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>误删除其他数据</strong></td>
+<td>集群崩溃</td>
+<td>操作前备份，明确 KEY 路径</td>
+</tr>
+<tr>
+<td><strong>版本兼容性问题</strong></td>
+<td>etcdctl 命令失效</td>
+<td>匹配 etcd 版本（v3 API）</td>
+</tr>
+<tr>
+<td><strong>残留资源引用</strong></td>
+<td>API Server 数据不一致</td>
+<td>全清理后重启控制平面组件</td>
+</tr>
+</tbody></table>
+<h4 id="操作后验证"><a href="#操作后验证" class="headerlink" title="操作后验证"></a>操作后验证</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 1. 确认命名空间已消失</span><br>kubectl get ns [NAMESPACE_NAME]<br><br><span class="hljs-comment"># 2. 检查控制器日志</span><br>kubectl logs -n kube-system kube-controller-manager-xxxxx | grep -C 10 <span class="hljs-string">&quot;namespace&quot;</span><br><br><span class="hljs-comment"># 3. 集群健康检查</span><br>kubectl get --raw=<span class="hljs-string">&#x27;/readyz?verbose&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="五、替代方案（优先尝试）"><a href="#五、替代方案（优先尝试）" class="headerlink" title="五、替代方案（优先尝试）"></a>五、替代方案（优先尝试）</h3><p>若尚未执行以下常规操作，<strong>强烈建议优先尝试</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 通过 API 强制清理（无需操作 etcd）</span><br>kubectl get ns [NS] -o json | jq <span class="hljs-string">&#x27;del(.spec.finalizers[])&#x27;</span> | kubectl replace --raw <span class="hljs-string">&quot;/api/v1/namespaces/[NS]/finalize&quot;</span> -f -<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="六、恢复方法-操作错误时"><a href="#六、恢复方法-操作错误时" class="headerlink" title="六、恢复方法 (操作错误时)"></a>六、恢复方法 (操作错误时)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 从快照恢复 etcd（会中断集群）</span><br>ETCDCTL_API=3 etcdctl snapshot restore backup.db \<br>  --data-dir /var/lib/etcd-new \<br>  --initial-cluster [CLUSTER_CONFIGURATION]<br></code></pre></td></tr></table></figure>
+<p><em>需要重新挂载 etcd 数据目录并重启组件</em></p>
+<hr>
+<p><strong>总结</strong>：etcd 的直接删除是 <strong>最后手段</strong>，操作需精确控制键路径，且必须满足特定条件（如命名空间已无 controller 关联资源）。建议优先通过 Finalizers 修正或 API 级强制删除解决问题。 </p>
+<hr>
+<h1 id="三、深入排查手段"><a href="#三、深入排查手段" class="headerlink" title="三、深入排查手段"></a>三、深入排查手段</h1><h2 id="附加排查步骤"><a href="#附加排查步骤" class="headerlink" title="附加排查步骤"></a>附加排查步骤</h2><ol>
+<li><p><strong>网络诊断</strong>：<br>确保 API Server 与各节点的 kubelet 通信正常，检查 Calico&#x2F;Flannel 日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get --raw=<span class="hljs-string">&#x27;/readyz?verbose&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Etcd 健康检查</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl get --raw=<span class="hljs-string">&#x27;/healthz/etcd&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>核心组件版本兼容性</strong>：<br>检查 <code>kube-apiserver</code>、<code>kube-controller-manager</code> 版本是否一致：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl version --short<br></code></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h1 id="四、预防策略"><a href="#四、预防策略" class="headerlink" title="四、预防策略"></a>四、预防策略</h1><table>
+<thead>
+<tr>
+<th>措施</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>限制 Finalizers 使用</strong></td>
+<td>自定义控制器中避免非必要 finalizers</td>
+</tr>
+<tr>
+<td><strong>启用 GC 监控</strong></td>
+<td>使用 Prometheus 监控资源删除延迟</td>
+</tr>
+<tr>
+<td><strong>定期 Namespace 清理</strong></td>
+<td>通过策略自动清理测试命名空间</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="五、补充建议"><a href="#五、补充建议" class="headerlink" title="五、补充建议"></a>五、补充建议</h1><ul>
+<li><strong>生产环境慎用野⼒删除</strong>：直接操作 etcd 可能引发集群级故障；</li>
+<li><strong>保留 API Server 日志</strong>：通过 <code>--v=4</code> 增加日志级别定位问题；</li>
+<li><strong>临时关闭 Admission 控制器</strong>：如存在冲突的 Webhook，可临时禁用。</li>
+</ul>
+<p>遇到更复杂的情况（如 etcd 数据损坏），可执行 <code>etcdctl snapshot restore</code> 恢复快照，建议在此类操作前通过 <strong>Velero</strong> 备份集群状态。 </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kubernetes/" class="print-no-link">#kubernetes</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>k8s namespace卡住解决方案</div>
+      <div>https://blog.740777352.xyz/2025/02/18/k8s namespace卡住解决方案/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/18/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day09/" title="Golang整体复习Day09">
+                        <span class="hidden-mobile">Golang整体复习Day09</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
