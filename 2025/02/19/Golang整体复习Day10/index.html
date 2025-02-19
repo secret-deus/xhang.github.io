@@ -1,0 +1,685 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Go 语言中的错误处理与其他语言不太一样，它把错误当成一种值来处理，更强调判断错误、处理错误，而不是一股脑的 catch 捕获异常。 Error接口和错误处理Error 接口Go 语言中把错误当成一种特殊的值来处理，不支持其他语言中使用try&#x2F;catch捕获异常的方式。 Error 接口Go 语言中使用一个名为 error 接口来表示错误类型。 123type error interface &amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang整体复习Day10">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/19/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day10/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="Go 语言中的错误处理与其他语言不太一样，它把错误当成一种值来处理，更强调判断错误、处理错误，而不是一股脑的 catch 捕获异常。 Error接口和错误处理Error 接口Go 语言中把错误当成一种特殊的值来处理，不支持其他语言中使用try&#x2F;catch捕获异常的方式。 Error 接口Go 语言中使用一个名为 error 接口来表示错误类型。 123type error interface &amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-19T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-19T01:47:45.322Z">
+<meta property="article:author" content="xhang">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="复习">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Golang整体复习Day10 - xhang&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Golang整体复习Day10"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-19 10:00" pubdate>
+          2025年2月19日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          754 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Golang整体复习Day10</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Go 语言中的错误处理与其他语言不太一样，它把错误当成一种值来处理，更强调判断错误、处理错误，而不是一股脑的 catch 捕获异常。</p>
+<h1 id="Error接口和错误处理"><a href="#Error接口和错误处理" class="headerlink" title="Error接口和错误处理"></a>Error接口和错误处理</h1><h2 id="Error-接口"><a href="#Error-接口" class="headerlink" title="Error 接口"></a>Error 接口</h2><p>Go 语言中把错误当成一种特殊的值来处理，不支持其他语言中使用<code>try/catch</code>捕获异常的方式。</p>
+<h3 id="Error-接口-1"><a href="#Error-接口-1" class="headerlink" title="Error 接口"></a>Error 接口</h3><p>Go 语言中使用一个名为 <code>error</code> 接口来表示错误类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> <span class="hljs-type">error</span> <span class="hljs-keyword">interface</span> &#123;<br>    Error() <span class="hljs-type">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>error</code> 接口只包含一个方法——<code>Error</code>，这个函数需要返回一个描述错误信息的字符串。</p>
+<p>当一个函数或方法需要返回错误时，我们通常是把错误作为最后一个返回值。例如下面标准库 os 中打开文件的函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Open</span><span class="hljs-params">(name <span class="hljs-type">string</span>)</span></span> (*File, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">return</span> OpenFile(name, O_RDONLY, <span class="hljs-number">0</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>由于 error 是一个接口类型，默认零值为<code>nil</code>。所以我们通常将调用函数返回的错误与<code>nil</code>进行比较，以此来判断函数是否返回错误。例如你会经常看到类似下面的错误判断代码。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">file, err := os.Open(<span class="hljs-string">&quot;./xx.go&quot;</span>)<br><span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;打开文件失败,err:&quot;</span>, err)<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong></p>
+<p>当我们使用<code>fmt</code>包打印错误时会自动调用 error 类型的 Error 方法，也就是会打印出错误的描述信息。</p>
+<h3 id="创建错误"><a href="#创建错误" class="headerlink" title="创建错误"></a>创建错误</h3><p>我们可以根据需求自定义 error，最简单的方式是使用<code>errors</code> 包提供的<code>New</code>函数创建一个错误。</p>
+<h4 id="errors-New"><a href="#errors-New" class="headerlink" title="errors.New"></a>errors.New</h4><p>函数签名如下，</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(text <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span><br></code></pre></td></tr></table></figure>
+
+<p>它接收一个字符串参数返回包含该字符串的错误。我们可以在函数返回时快速创建一个错误。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">queryById</span><span class="hljs-params">(id <span class="hljs-type">int64</span>)</span></span> (*Info, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">if</span> id &lt;= <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, errors.New(<span class="hljs-string">&quot;无效的id&quot;</span>)<br>	&#125;<br><br>	<span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>或者用来定义一个错误变量，例如标准库<code>io.EOF</code>错误定义如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> EOF = errors.New(<span class="hljs-string">&quot;EOF&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="fmt-Errorf"><a href="#fmt-Errorf" class="headerlink" title="fmt.Errorf"></a>fmt.Errorf</h3><p>当我们需要传入格式化的错误描述信息时，使用<code>fmt.Errorf</code>是个更好的选择。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">fmt.Errorf(<span class="hljs-string">&quot;查询数据库失败，err:%v&quot;</span>, err)<br></code></pre></td></tr></table></figure>
+
+<p>但是上面的方式会丢失原有的错误类型，只拿到错误描述的文本信息。</p>
+<p>为了不丢失函数调用的错误链，使用<code>fmt.Errorf</code>时搭配使用特殊的格式化动词<code>%w</code>，可以实现基于已有的错误再包装得到一个新的错误。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">fmt.Errorf(<span class="hljs-string">&quot;查询数据库失败，err:%w&quot;</span>, err)<br></code></pre></td></tr></table></figure>
+
+<p>对于这种二次包装的错误，<code>errors</code>包中提供了以下三个方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Unwrap</span><span class="hljs-params">(err <span class="hljs-type">error</span>)</span></span> <span class="hljs-type">error</span>                 <span class="hljs-comment">// 获得err包含下一层错误</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Is</span><span class="hljs-params">(err, target <span class="hljs-type">error</span>)</span></span> <span class="hljs-type">bool</span>              <span class="hljs-comment">// 判断err是否包含target</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">As</span><span class="hljs-params">(err <span class="hljs-type">error</span>, target <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> <span class="hljs-type">bool</span>  <span class="hljs-comment">// 判断err是否为target类型</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="错误结构体类型"><a href="#错误结构体类型" class="headerlink" title="错误结构体类型"></a>错误结构体类型</h3><p>此外我们还可以自己定义结构体类型，实现error&#96;接口。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// OpError 自定义结构体类型</span><br><span class="hljs-keyword">type</span> OpError <span class="hljs-keyword">struct</span> &#123;<br>	Op <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-comment">// Error OpError 类型实现error接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *OpError)</span></span> Error() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;无权执行%s操作&quot;</span>, e.Op)<br>&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Golang/" class="print-no-link">#Golang</a>
+      
+        <a href="/tags/%E5%A4%8D%E4%B9%A0/" class="print-no-link">#复习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Golang整体复习Day10</div>
+      <div>https://blog.740777352.xyz/2025/02/19/Golang整体复习Day10/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/20/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day11/" title="Golang整体复习Day11">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Golang整体复习Day11</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/18/k8s%20namespace%E5%8D%A1%E4%BD%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="k8s namespace卡住解决方案">
+                        <span class="hidden-mobile">k8s namespace卡住解决方案</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
