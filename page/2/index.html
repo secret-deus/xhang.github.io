@@ -229,6 +229,163 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/02/19/Golang%E5%BC%80%E5%8F%91%E8%8C%83%E5%BC%8F/" target="_self">
+          Golang开发范式
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/19/Golang%E5%BC%80%E5%8F%91%E8%8C%83%E5%BC%8F/" target="_self">
+        <div>
+          以下是Go语言（Golang）的主要开发范式总结，结合官方最佳实践和社区经验： 一、编程哲学核心 极简主义  关键字仅25个（Go 1.22） 强制：禁止未使用变量&#x2F;包（编译错误） 惯例：单字母变量仅用于短作用域（如 i, r）   明确错误处理 123if result, err := do(); err != nil &#123;    return fmt.Errorf(&quot
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-19 00:00" pubdate>
+              2025-02-19
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/18/k8s%20namespace%E5%8D%A1%E4%BD%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+          k8s namespace卡住解决方案
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/18/k8s%20namespace%E5%8D%A1%E4%BD%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+        <div>
+          在 Kubernetes 中命名空间（Namespace）出现”卡住”问题时，通常表现为 无法删除、资源停留在 Terminating 状态 或 操作响应缓慢。以下是分步骤的解决方案及原理分析：  一、基本原则 优先尝试优雅删除：先避免直接操作 etcd； 检查依赖资源：残留资源或 Finalizers 通常是主因； 需集群管理权限：操作需 cluster-admin 权限。   二、核心解决方案
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-18 17:50" pubdate>
+              2025-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/kubernetes/">#kubernetes</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/18/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day09/" target="_self">
+          Golang整体复习Day09
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/18/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day09/" target="_self">
+        <div>
+          接口（interface）定义了一个对象的行为规范，只定义规范不实现，由具体的对象来实现规范的细节。 接口学习目标  了解为什么需要接口以及接口的特点 掌握接口的声明和使用 掌握接口值的概念 掌握空接口的特点及其使用场景  在Go语言中接口（interface）是一种类型，一种抽象的类型。相较于之前章节中讲到的那些具体类型（字符串、切片、结构体等）更注重“我是谁”，接口类型更注重“我能做什么”的问
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-18 17:28" pubdate>
+              2025-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+              <a href="/tags/%E5%A4%8D%E4%B9%A0/">#复习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/02/18/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day08/" target="_self">
           Golang整体复习Day08
         </a>
@@ -544,175 +701,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" target="_self">
-          Golang整体复习Day07
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" target="_self">
-        <div>
-          区别于C&#x2F;C++中的指针，Go语言中的指针不能进行偏移和运算，是安全指针。 要搞明白Go语言中的指针需要先知道3个概念：指针地址、指针类型和指针取值。 Go语言中的指针任何程序数据载入内存后，在内存都有他们的地址，这就是指针。而为了保存一个数据在内存中的地址，我们就需要指针变量。 比如，“永远不要高估自己”这句话是我的座右铭，我想把它写入程序中，程序一启动这句话是要加载到内存（假设内存地
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-17 00:00" pubdate>
-              2025-02-17
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" target="_self">
-          Golang整体复习Day06
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/16/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day06/" target="_self">
-        <div>
-          函数是组织好的、可重复使用的、用于执行指定任务的代码块。本文介绍了Go语言中函数的相关内容。 函数Go语言中支持函数、匿名函数和闭包，并且函数在Go语言中属于“一等公民”。 函数定义Go语言中定义函数使用func关键字，具体格式如下： 123func 函数名(参数)(返回值)&#123;    函数体&#125;  其中：  函数名：由字母、数字、下划线组成。但函数名的第一个字母不能是数字。在同一
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-16 00:00" pubdate>
-              2025-02-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" target="_self">
-          Nginx 跨域配置
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nginx%E8%B7%A8%E5%9F%9F/" target="_self">
-        <div>
-          在 Nginx 中实现跨域（CORS，Cross-Origin Resource Sharing）是通过配置 HTTP 响应头来允许浏览器跨域访问资源。以下是详细的配置方法和解析：  1. 跨域问题的背景 跨域 是指浏览器从一个域名（源）向另一个域名发起请求时，由于浏览器的同源策略（Same-Origin Policy），请求会被阻止。 CORS 是一种机制，允许服务器声明哪些源可以访问其资源。
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-13 16:24" pubdate>
-              2025-02-13
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/">#知识梳理</a>
-            
-              <a href="/tags/Nginx/">#Nginx</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="page-number" href="/page/5/#board">5</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
