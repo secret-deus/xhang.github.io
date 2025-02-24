@@ -229,6 +229,69 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/" target="_self">
+          记一次nginx405问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/17/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx405%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          问题描述公司服务突然出现405问题，导致服务无法正常访问，而且日志也中断了。研发人员尝试重启服务，发现重启不了，笔者登陆服务器查看资源占用情况正常，服务运行正常。同事提到405可能是waf拦截了，安全检查后发现确实拦截了。 问题排查由于公司服务是跨云部署，一部分在阿里云，一部分在天翼云，阿里云出口ip就是nat网关的ip，因此在流量增大时，会导致nat出口ip被waf加入黑名单，导致服务不可用。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-17 10:00" pubdate>
+              2025-02-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%85%E9%9A%9C%E6%A2%B3%E7%90%86/" class="category-chain-item">故障梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/nginx/">#nginx</a>
+            
+              <a href="/tags/405/">#405</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/02/17/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day07/" target="_self">
           Golang整体复习Day07
         </a>
@@ -710,67 +773,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" target="_self">
-          nacos配置变更
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/13/nacos%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4/" target="_self">
-        <div>
-          配置变更插件社区中一直以来都希望Nacos配置中心能在配置发生变更时，通知一些特定系统，用于发送记录、警告等审计功能。在2.3.0版本前，只能通过模拟Nacos客户端订阅配置的方式，对核心配置的变更操作进行订阅，在收到变更通知后，进行发送记录、警告等功能的执行。 这种实现方式有几个比较大的问题，第一是监听的配置需要逐个添加，难以对所有配置变更进行获取；第二是只能在配置变更后执行功能逻辑，无法做到前
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-13 00:00" pubdate>
-              2025-02-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/nacos/">#nacos</a>
             
           </div>
         
