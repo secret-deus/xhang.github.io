@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本文介绍了Go语言中将结构体转成map[string]interface&#123;&#125;时你需要了解的“坑”，也有你需要知道的若干方法。 我们在Go语言中通常使用结构体来保存我们的数据，例如要存储用户信息，我们可能会定义如下结构体： 1234567&#x2F;&#x2F; UserInfo 用户信息type UserInfo struct &#123;	Name string &#96;json:&quot;name">
+<meta property="og:type" content="article">
+<meta property="og:title" content="结构体转map[string]interface{}的若干方法">
+<meta property="og:url" content="https://blog.740777352.xyz/2025/02/25/%E7%BB%93%E6%9E%84%E4%BD%93%E8%BD%ACmap[string]interface%7B%7D%E7%9A%84%E8%8B%A5%E5%B9%B2%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="xhang&#39;s blog">
+<meta property="og:description" content="本文介绍了Go语言中将结构体转成map[string]interface&#123;&#125;时你需要了解的“坑”，也有你需要知道的若干方法。 我们在Go语言中通常使用结构体来保存我们的数据，例如要存储用户信息，我们可能会定义如下结构体： 1234567&#x2F;&#x2F; UserInfo 用户信息type UserInfo struct &#123;	Name string &#96;json:&quot;name">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-25T01:42:01.113Z">
+<meta property="article:modified_time" content="2025-02-25T01:52:17.595Z">
+<meta property="article:author" content="xhang">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>结构体转map[string]interface{}的若干方法 - xhang&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.740777352.xyz","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="结构体转map[string]interface{}的若干方法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-25 09:42" pubdate>
+          2025年2月25日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">结构体转map[string]interface{}的若干方法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>本文介绍了Go语言中将结构体转成<code>map[string]interface&#123;&#125;</code>时你需要了解的“坑”，也有你需要知道的若干方法。</p>
+<p>我们在Go语言中通常使用结构体来保存我们的数据，例如要存储用户信息，我们可能会定义如下结构体：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// UserInfo 用户信息</span><br><span class="hljs-keyword">type</span> UserInfo <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;name&quot;`</span><br>	Age  <span class="hljs-type">int</span>    <span class="hljs-string">`json:&quot;age&quot;`</span><br>&#125;<br><br>u1 := UserInfo&#123;Name: <span class="hljs-string">&quot;q1mi&quot;</span>, Age: <span class="hljs-number">18</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>假设现在要将上面的<code>u1</code>转换成<code>map[string]interface&#123;&#125;</code>，该如何操作呢？</p>
+<h2 id="结构体转map-string-interface"><a href="#结构体转map-string-interface" class="headerlink" title="结构体转map[string]interface"></a>结构体转map[string]interface</h2><h3 id="JSON序列化方式"><a href="#JSON序列化方式" class="headerlink" title="JSON序列化方式"></a>JSON序列化方式</h3><p>这不是很简单吗？我用JSON序列化一下u1，再反序列化成map不就可以了么。说干就干，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	u1 := UserInfo&#123;Name: <span class="hljs-string">&quot;q1mi&quot;</span>, Age: <span class="hljs-number">18</span>&#125;<br><br>	b, _ := json.Marshal(&amp;u1)<br>	<span class="hljs-keyword">var</span> m <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;<br>	_ = json.Unmarshal(b, &amp;m)<br>	<span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m&#123;<br>		fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v\n&quot;</span>, k, v)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">key:name value:q1mi<br>key:age value:18<br></code></pre></td></tr></table></figure>
+
+<p>看起来没什么问题，但其实这里是有一个“坑”的。那就是Go语言中的<code>json</code>包在序列化空接口存放的数字类型（整型、浮点型等）都会序列化成float64类型。</p>
+<p>也就是上面例子中<code>m[&quot;age&quot;]</code>现在底层是一个<code>float64</code>了，不是个<code>int</code>了。我们来验证下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	u1 := UserInfo&#123;Name: <span class="hljs-string">&quot;q1mi&quot;</span>, Age: <span class="hljs-number">18</span>&#125;<br><br>	b, _ := json.Marshal(&amp;u1)<br>	<span class="hljs-keyword">var</span> m <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;<br>	_ = json.Unmarshal(b, &amp;m)<br>	<span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m&#123;<br>		fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v value type:%T\n&quot;</span>, k, v, v)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">key:name value:q1mi value <span class="hljs-built_in">type</span>:string<br>key:age value:18 value <span class="hljs-built_in">type</span>:float64<br></code></pre></td></tr></table></figure>
+
+<p>很显然，出现了一个意料之外的行为，我们需要想办法规避掉。</p>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>没办法就需要自己动手去实现了。这里使用反射遍历结构体字段的方式生成map，具体代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// ToMap 结构体转为Map[string]interface&#123;&#125;</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ToMap</span><span class="hljs-params">(in <span class="hljs-keyword">interface</span>&#123;&#125;, tagName <span class="hljs-type">string</span>)</span></span> (<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">error</span>)&#123;<br>	out := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;)<br><br>	v := reflect.ValueOf(in)<br>	<span class="hljs-keyword">if</span> v.Kind() == reflect.Ptr &#123;<br>		v = v.Elem()<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> v.Kind() != reflect.Struct &#123;  <span class="hljs-comment">// 非结构体返回错误提示</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, fmt.Errorf(<span class="hljs-string">&quot;ToMap only accepts struct or struct pointer; got %T&quot;</span>, v)<br>	&#125;<br><br>	t := v.Type()<br>	<span class="hljs-comment">// 遍历结构体字段</span><br>	<span class="hljs-comment">// 指定tagName值为map中key;字段值为map中value</span><br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; v.NumField(); i++ &#123;<br>		fi := t.Field(i)<br>		<span class="hljs-keyword">if</span> tagValue := fi.Tag.Get(tagName); tagValue != <span class="hljs-string">&quot;&quot;</span> &#123;<br>			out[tagValue] = v.Field(i).Interface()<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> out, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>验证一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">m2, _ := ToMap(&amp;u1, <span class="hljs-string">&quot;json&quot;</span>)<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m2&#123;<br>	fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v value type:%T\n&quot;</span>, k, v, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">key:name value:q1mi value <span class="hljs-built_in">type</span>:string<br>key:age value:18 value <span class="hljs-built_in">type</span>:int<br></code></pre></td></tr></table></figure>
+
+<p>这一次<code>map[&quot;age&quot;]</code>的类型就对了的。</p>
+<h3 id="第三方库structs"><a href="#第三方库structs" class="headerlink" title="第三方库structs"></a>第三方库structs</h3><p>除了自己实现，Github上也有现成的轮子，例如第三方库：<a target="_blank" rel="noopener" href="https://github.com/fatih/structs">https://github.com/fatih/structs</a>。</p>
+<p>它使用的自定义结构体tag是<code>structs</code>:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// UserInfo 用户信息</span><br><span class="hljs-keyword">type</span> UserInfo <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;name&quot; structs:&quot;name&quot;`</span><br>	Age  <span class="hljs-type">int</span>    <span class="hljs-string">`json:&quot;age&quot; structs:&quot;age&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>用法很简单：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">m3 := structs.Map(&amp;u1)<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m3 &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v value type:%T\n&quot;</span>, k, v, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>structs</code>这个包也有很多其他的使用示例，大家可以去查看文档。但是需要注意的是目前这个库已经被作者设置为只读了。</p>
+<h2 id="嵌套结构体转map-string-interface"><a href="#嵌套结构体转map-string-interface" class="headerlink" title="嵌套结构体转map[string]interface"></a>嵌套结构体转map[string]interface</h2><p><code>structs</code>本身是支持嵌套结构体转<code>map[string]interface&#123;&#125;</code>的，遇到结构体嵌套它会转换为<code>map[string]interface&#123;&#125;</code>嵌套<code>map[string]interface&#123;&#125;</code>的模式。</p>
+<p>我们定义一组嵌套的结构体如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// UserInfo 用户信息</span><br><span class="hljs-keyword">type</span> UserInfo <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;name&quot; structs:&quot;name&quot;`</span><br>	Age  <span class="hljs-type">int</span>    <span class="hljs-string">`json:&quot;age&quot; structs:&quot;age&quot;`</span><br>	Profile <span class="hljs-string">`json:&quot;profile&quot; structs:&quot;profile&quot;`</span><br>&#125;<br><br><span class="hljs-comment">// Profile 配置信息</span><br><span class="hljs-keyword">type</span> Profile <span class="hljs-keyword">struct</span> &#123;<br>	Hobby <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;hobby&quot; structs:&quot;hobby&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>声明结构体变量u1：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">u1 := UserInfo&#123;Name: <span class="hljs-string">&quot;q1mi&quot;</span>, Age: <span class="hljs-number">18</span>, Profile: Profile&#123;<span class="hljs-string">&quot;双色球&quot;</span>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="第三方库structs-1"><a href="#第三方库structs-1" class="headerlink" title="第三方库structs"></a>第三方库structs</h3><p>代码和上面的其实是一样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">m3 := structs.Map(&amp;u1)<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m3 &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v value type:%T\n&quot;</span>, k, v, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">key:name value:q1mi value <span class="hljs-built_in">type</span>:string<br>key:age value:18 value <span class="hljs-built_in">type</span>:int<br>key:profile value:map[hobby:双色球] value <span class="hljs-built_in">type</span>:map[string]interface &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从结果来看最后嵌套字段<code>profile</code>是<code>map[string]interface &#123;&#125;</code>，属于map嵌套map。</p>
+<h3 id="使用反射转成单层map"><a href="#使用反射转成单层map" class="headerlink" title="使用反射转成单层map"></a>使用反射转成单层map</h3><p>如果我们想把嵌套的结构体转换成一个单层map该怎么做呢？</p>
+<p>我们把上面反射的代码稍微修改一下就可以了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// ToMap2 将结构体转为单层map</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ToMap2</span><span class="hljs-params">(in <span class="hljs-keyword">interface</span>&#123;&#125;, tag <span class="hljs-type">string</span>)</span></span> (<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">error</span>) &#123;<br><br>	<span class="hljs-comment">// 当前函数只接收struct类型</span><br>	v := reflect.ValueOf(in)<br>	<span class="hljs-keyword">if</span> v.Kind() == reflect.Ptr &#123; <span class="hljs-comment">// 结构体指针</span><br>		v = v.Elem()<br>	&#125;<br>	<span class="hljs-keyword">if</span> v.Kind() != reflect.Struct &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, fmt.Errorf(<span class="hljs-string">&quot;ToMap only accepts struct or struct pointer; got %T&quot;</span>, v)<br>	&#125;<br><br>	out := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;)<br>	queue := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)<br>	queue = <span class="hljs-built_in">append</span>(queue, in)<br><br>	<span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(queue) &gt; <span class="hljs-number">0</span> &#123;<br>		v := reflect.ValueOf(queue[<span class="hljs-number">0</span>])<br>		<span class="hljs-keyword">if</span> v.Kind() == reflect.Ptr &#123; <span class="hljs-comment">// 结构体指针</span><br>			v = v.Elem()<br>		&#125;<br>		queue = queue[<span class="hljs-number">1</span>:]<br>		t := v.Type()<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; v.NumField(); i++ &#123;<br>			vi := v.Field(i)<br>			<span class="hljs-keyword">if</span> vi.Kind() == reflect.Ptr &#123; <span class="hljs-comment">// 内嵌指针</span><br>				vi = vi.Elem()<br>				<span class="hljs-keyword">if</span> vi.Kind() == reflect.Struct &#123; <span class="hljs-comment">// 结构体</span><br>					queue = <span class="hljs-built_in">append</span>(queue, vi.Interface())<br>				&#125; <span class="hljs-keyword">else</span> &#123;<br>					ti := t.Field(i)<br>					<span class="hljs-keyword">if</span> tagValue := ti.Tag.Get(tag); tagValue != <span class="hljs-string">&quot;&quot;</span> &#123;<br>						<span class="hljs-comment">// 存入map</span><br>						out[tagValue] = vi.Interface()<br>					&#125;<br>				&#125;<br>				<span class="hljs-keyword">break</span><br>			&#125;<br>			<span class="hljs-keyword">if</span> vi.Kind() == reflect.Struct &#123; <span class="hljs-comment">// 内嵌结构体</span><br>				queue = <span class="hljs-built_in">append</span>(queue, vi.Interface())<br>				<span class="hljs-keyword">continue</span><br>			&#125;<br>			<span class="hljs-comment">// 一般字段</span><br>			ti := t.Field(i)<br>			<span class="hljs-keyword">if</span> tagValue := ti.Tag.Get(tag); tagValue != <span class="hljs-string">&quot;&quot;</span> &#123;<br>				<span class="hljs-comment">// 存入map</span><br>				out[tagValue] = vi.Interface()<br>			&#125;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> out, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">m4, _ := ToMap2(&amp;u1, <span class="hljs-string">&quot;json&quot;</span>)<br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m4 &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;key:%v value:%v value type:%T\n&quot;</span>, k, v, v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">key:name value:q1mi value <span class="hljs-keyword">type</span>:<span class="hljs-type">string</span><br>key:age value:<span class="hljs-number">18</span> value <span class="hljs-keyword">type</span>:<span class="hljs-type">int</span><br>key:hobby value:双色球 value <span class="hljs-keyword">type</span>:<span class="hljs-type">string</span><br></code></pre></td></tr></table></figure>
+
+<p>这下我们就把嵌套的结构体转为单层的map了，但是要注意这种场景下结构体和嵌套结构体的字段就需要避免重复。</p>
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9F%A5%E8%AF%86%E6%A2%B3%E7%90%86/" class="category-chain-item">知识梳理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Golang/" class="print-no-link">#Golang</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>结构体转map[string]interface{}的若干方法</div>
+      <div>https://blog.740777352.xyz/2025/02/25/结构体转map[string]interface{}的若干方法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/24/Golang%E6%95%B4%E4%BD%93%E5%A4%8D%E4%B9%A0Day17/" title="关于切片操作的技巧">
+                        <span class="hidden-mobile">关于切片操作的技巧</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
